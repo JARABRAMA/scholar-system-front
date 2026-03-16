@@ -1,3 +1,7 @@
 export function Aouth() {
-  return <>Hello world</>;
+  return (
+    <>
+      <small className="text-blue">Hello world</small>
+    </>
+  );
 }
