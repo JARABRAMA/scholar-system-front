@@ -3,7 +3,7 @@ import { TobBar } from "../components/TopBar.jsx";
 
 export function Aouth() {
   return (
-    <main>
+    <main className="flex justify-center items-center">
       <LoginForm />
     </main>
   );
