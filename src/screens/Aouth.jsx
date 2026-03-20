@@ -1,7 +1,10 @@
+import { LoginForm } from "../components/LoginForm.jsx";
+import { TobBar } from "../components/TopBar.jsx";
+
 export function Aouth() {
   return (
-    <>
-      <small className="text-blue">Hello world</small>
-    </>
+    <main>
+      <LoginForm />
+    </main>
   );
 }

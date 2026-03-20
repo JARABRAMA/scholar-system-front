@@ -1,17 +1,22 @@
 import { useState } from "react";
 
+import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { Aouth } from "./screens/Aouth.jsx";
+import { TobBar } from "./components/TopBar.jsx";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Aouth />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <TobBar />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Aouth />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
