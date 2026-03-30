@@ -1,5 +1,6 @@
 import { Button } from "./Button";
 import { Link } from "react-router";
+import { Input } from "./Input";
 
 export function LoginForm() {
   return (
@@ -38,23 +39,5 @@ export function LoginForm() {
         </Link>
       </form>
     </article>
-  );
-}
-
-function Input({ children, placeholder, type, name, required }) {
-  return (
-    <div className="flex flex-col">
-      <div>
-        <label>{children}</label>
-        {required && <span className="text-red-500 "> *</span>}
-      </div>
-      <input
-        className="border rounded-md py-1 px-2"
-        name={name}
-        type={type}
-        required={required}
-        placeholder={placeholder}
-      />
-    </div>
   );
 }
