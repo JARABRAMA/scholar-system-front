@@ -1,9 +1,11 @@
-export function RoleSelect() {
+export function RoleSelect({ label = false }) {
   return (
     <div className="flex flex-col  ">
-      <label>
-        Rol <span className="text-red-500">*</span>
-      </label>
+      {label && (
+        <label>
+          Rol <span className="text-red-500">*</span>
+        </label>
+      )}
       <select className="border rounded-md h-fit p-1.5">
         <option value="">Seleccionar rol</option>
         <option value="ESTUDIANTE">ESTUDIANTE</option>

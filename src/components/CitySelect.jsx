@@ -1,9 +1,11 @@
-export function CitySelect() {
+export function CitySelect({ label = false }) {
   return (
     <div className="flex flex-col">
-      <label>
-        Ciudad de residencia <span className="text-red-500">*</span>
-      </label>
+      {label && (
+        <label>
+          Ciudad de residencia <span className="text-red-500">*</span>
+        </label>
+      )}
       <select name="city" className="border rounded-md h-fit p-1.5">
         <option value="">Seleccionar ciudad</option>
         <option value="Mediellin">Medellin</option>

@@ -56,8 +56,8 @@ function NewUserForm() {
           required={true}
           type="date"
         />
-        <RoleSelect />
-        <CitySelect />
+        <RoleSelect label={true} />
+        <CitySelect label={true} />
         <Input
           name="password"
           children="Contraseña"
