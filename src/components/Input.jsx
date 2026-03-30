@@ -7,13 +7,13 @@ export function Input({
   desciption,
 }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col px-1 py-2 gap-1 ">
       <div>
         <label>{children}</label>
         {required && <span className="text-red-500 "> *</span>}
       </div>
       <input
-        className="border rounded-md py-1 px-2"
+        className="py-1 px-3 bg-white border border-stone-300 rounded-md focus:outline-blue-500 shadow-sm shadow-stone-300"
         name={name}
         type={type}
         required={required}

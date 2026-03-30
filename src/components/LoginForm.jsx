@@ -4,7 +4,10 @@ import { Input } from "./Input";
 
 export function LoginForm() {
   return (
-    <article className="bg-gray-200 w-md rounded-2xl px-5  py-4 flex flex-col gap-3">
+    <article
+      className="w-md rounded-2xl px-5  py-6 flex flex-col gap-3 
+    bg-stone-200 border-2 border-stone-300 shadow-md shadow-stone-300/80"
+    >
       <div>
         <h2 className="text-3xl font-bold m-0 p-0">Bienvenido de Vuelta</h2>
         <small className="text-sm text-gray-500">
