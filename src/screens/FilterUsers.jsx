@@ -48,7 +48,7 @@ function SearchBar() {
 
 function Content() {
   return (
-    <section className="m-4">
+    <section className="my-8 mx-12 max-w-5xl ">
       <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-4xl">Gestionar Usuarios</h2>
