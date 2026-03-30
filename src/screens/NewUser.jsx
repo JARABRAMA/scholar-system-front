@@ -1,6 +1,8 @@
 import { SideBar } from "../components/SideBar";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
+import { RoleSelect } from "../components/RoleSelect.jsx";
+import { CitySelect } from "../components/CitySelect.jsx";
 
 export function NewUser() {
   return (
@@ -21,40 +23,6 @@ function Content() {
 
       <NewUserForm />
     </section>
-  );
-}
-
-function RoleSelect() {
-  return (
-    <div className="flex flex-col  ">
-      <label>
-        Rol <span className="text-red-500">*</span>
-      </label>
-      <select className="border rounded-md h-fit p-1.5">
-        <option value="">Seleccionar rol</option>
-        <option value="ESTUDIANTE">ESTUDIANTE</option>
-        <option value="PROFESOR">PROFESOR</option>
-        <option value="ADMINISTRADOR">ADMINSTRADOR</option>
-      </select>
-    </div>
-  );
-}
-
-function CitySelect() {
-  return (
-    <div className="flex flex-col">
-      <label>
-        Ciudad de residencia <span className="text-red-500">*</span>
-      </label>
-      <select name="city" className="border rounded-md h-fit p-1.5">
-        <option value="">Seleccionar ciudad</option>
-        <option value="Mediellin">Medellin</option>
-        <option value="">Bogota</option>
-        <option value="">Cali</option>
-        <option value="">Carepa</option>
-        <option value="">Chigorodo</option>
-      </select>
-    </div>
   );
 }
 
