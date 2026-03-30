@@ -26,19 +26,22 @@ function StatisticCard({ title, value }) {
 
 function SearchBar() {
   return (
-    <div className="flex gap-5">
+    <div className="grid grid-cols-[2fr_1fr_1fr]  gap-x-4 items-center">
       <div className="flex gap-2 bg-white shadow-md shadow-stone-200 border border-stone-300 px-1.5 rounded-md items-center py-2">
         <svg className="size-6">
           <use href="/sprite.svg#search"></use>
         </svg>
         <input
           type="text"
-          placeholder="Buscar usuario..."
-          className="border-none focus:outline-none bg-transparent text-md"
+          placeholder="Buscar usuario por nombre completo"
+          className="border-none focus:outline-none bg-transparent text-md flex flex-1"
         ></input>
       </div>
-      <RoleSelect />
-      <CitySelect />
+      <RoleSelect className="bg-white border border-stone-300 rounded-2xl ring-0 outline-0 shadow-md shadow-stone-200 py-2.5" />
+      <CitySelect
+        className="bg-white border border-stone-300 rounded-2xl ring-0 outline-0 shadow-md shadow-stone-200 py-2.5"
+        py-2
+      />
     </div>
   );
 }
