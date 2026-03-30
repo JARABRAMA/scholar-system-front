@@ -1,6 +1,6 @@
-export function CitySelect({ label = false }) {
+export function CitySelect({ label = false, className = "" }) {
   return (
-    <div className="flex flex-col">
+    <div className={`flex flex-col ${className}`}>
       {label && (
         <label>
           Ciudad de residencia <span className="text-red-500">*</span>
