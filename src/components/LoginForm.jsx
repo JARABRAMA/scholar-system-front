@@ -1,8 +1,10 @@
 import { Button } from "./Button";
 import { Link } from "react-router";
 import { Input } from "./Input";
+import { useLogin } from "../hooks/UseLogin";
 
 export function LoginForm() {
+  const { onLogin, error } = useLogin();
   return (
     <article
       className="w-md rounded-2xl px-5  py-6 flex flex-col gap-3 
@@ -15,7 +17,7 @@ export function LoginForm() {
         </small>
       </div>
 
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={onLogin}>
         <Input
           name="email"
           placeholder="user@gmail.com"
@@ -33,6 +35,7 @@ export function LoginForm() {
         >
           Contraseña
         </Input>
+        {error && <span className="text-red-400 self-center">{error}</span>}
         <Button className="bg-blue-700 text-gray-100 hover:bg-blue-600 border-0 hover:outline-0">
           Iniciar Sesión
         </Button>
