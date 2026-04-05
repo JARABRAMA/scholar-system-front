@@ -1,17 +1,17 @@
-import { Outlet, useNavigate } from "react-router";
+import { Navigate, Outlet } from "react-router";
 import { useLoginStore } from "../store/LoginStore";
 
 export function PrivateRoute({ allowedRoles = [] }) {
-  const navigate = useNavigate();
   const token = useLoginStore((state) => state.accessToken);
   const role = useLoginStore((state) => state.role);
+  console.log("protected route: ", { token, role });
 
   if (!token) {
-    navigate("/login");
+    return <Navigate to="/" replace />;
   }
 
   if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
-    navigate("/unauthorized");
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return <Outlet />;
