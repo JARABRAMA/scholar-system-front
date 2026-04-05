@@ -9,8 +9,8 @@ import { PrivateRoute } from "./components/PrivateRoute.jsx";
 function App() {
   return (
     <>
-      <TobBar />
       <BrowserRouter>
+        <TobBar />
         <Routes>
           <Route path="/" element={<Aouth />} />
           <Route element={<PrivateRoute allowedRoles={["ADMINISTRADOR"]} />}>
