@@ -2,12 +2,21 @@ import { SideBar } from "../components/SideBar.jsx";
 import { Button } from "../components/Button.jsx";
 import { RoleSelect } from "../components/RoleSelect.jsx";
 import { CitySelect } from "../components/CitySelect.jsx";
+import { useFilterUsers } from "../hooks/UseFilterUsers.jsx";
+import { Spinner } from "../components/Spinner.jsx";
 
 export function FilterUsers() {
+  const { users, loading, error, onSetSearch, onSetRole } = useFilterUsers();
+
   return (
     <main className="grid grid-cols-[auto_1fr] bg-stone-100">
       <SideBar />
-      <Content />
+      <Content
+        setRoles={onSetRole}
+        setSearch={onSetSearch}
+        users={users}
+        loading={loading}
+      />
     </main>
   );
 }
@@ -24,7 +33,7 @@ function StatisticCard({ title, value }) {
   );
 }
 
-function SearchBar() {
+function SearchBar({ setRoles, setSearch }) {
   return (
     <div className="grid grid-cols-[2fr_1fr_1fr]  gap-x-4 items-center">
       <div className="flex gap-2 bg-white shadow-md shadow-stone-200 border border-stone-300 px-1.5 rounded-md items-center py-2">
@@ -32,12 +41,16 @@ function SearchBar() {
           <use href="/sprite.svg#search"></use>
         </svg>
         <input
+          onChange={(e) => setSearch(e.target.value)}
           type="text"
           placeholder="Buscar usuario por nombre completo"
           className="border-none focus:outline-none bg-transparent text-md flex flex-1"
         ></input>
       </div>
-      <RoleSelect className="bg-white border border-stone-300 rounded-2xl ring-0 outline-0 shadow-md shadow-stone-200 py-2.5" />
+      <RoleSelect
+        onInput={setRoles}
+        className="bg-white border border-stone-300 rounded-2xl ring-0 outline-0 shadow-md shadow-stone-200 py-2.5"
+      />
       <CitySelect
         className="bg-white border border-stone-300 rounded-2xl ring-0 outline-0 shadow-md shadow-stone-200 py-2.5"
         py-2
@@ -46,9 +59,9 @@ function SearchBar() {
   );
 }
 
-function Content() {
+function Content({ setRoles, setSearch, users, loading }) {
   return (
-    <section className="my-8 mx-12 max-w-5xl ">
+    <section className="py-8 px-12 flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-4xl">Gestionar Usuarios</h2>
@@ -71,7 +84,77 @@ function Content() {
         <StatisticCard title={"ADMINISTRADORES"} value={14} />
       </div>
 
-      <SearchBar />
+      <SearchBar setRoles={setRoles} setSearch={setSearch} />
+      <UsersList users={users} loading={loading} />
     </section>
   );
+}
+
+function UsersList({ users, loading }) {
+  return (
+    <section
+      className="flex flex-col border border-stone-400 rounded-xl pt-2 shadow-md
+     shadow-stone-300 flex-1 overflow-y-auto mt-6"
+    >
+      <div className="grid grid-cols-4 border-b border-stone-400  px-4">
+        <span className="text-stone-600 justify-self-center slef-center">
+          NOMBRE
+        </span>
+        <span className="text-stone-600 justify-self-center slef-center">
+          ROL
+        </span>
+        <span className="text-stone-600 justify-self-center slef-center">
+          CIUDAD
+        </span>
+        <span className="text-stone-600 justify-self-center slef-center">
+          EMAIL
+        </span>
+      </div>
+
+      {users &&
+        !loading &&
+        users.map((user) => {
+          return (
+            <div
+              className="grid grid-cols-4 text-stone-900 border-b px-4 border-stone-400 
+              last:border-b-0  bg-white hover:bg-stone-100 py-2 justify-between"
+              key={user.id}
+            >
+              <strong className="self-center">{user.fullName}</strong>
+              <RoleSpan role={user.role} />
+              <span className="self-center justify-self-center">{`${user.municipality} - ${user.department}`}</span>
+              <span
+                className="bg-blue-200 text-blue-700 rounded-full w-fit 
+              h-fit self-center justify-self-center px-3 py-.5"
+              >
+                {user.email}
+              </span>
+            </div>
+          );
+        })}
+
+      {loading && (
+        <div className="flex flex-1 items-center justify-center">
+          <Spinner />
+        </div>
+      )}
+    </section>
+  );
+}
+
+function RoleSpan({ role }) {
+  let className = `self-center justify-self-center w-fit h-fit py-.5 px-3 rounded-full `;
+  if (role === "ADMINISTRADOR") {
+    className += `bg-red-100 text-red-700`;
+  } else if (role === "PROFESOR") {
+    className += `bg-yellow-100 text-yellow-700`;
+  } else if (role === "ESTUDIANTE") {
+    className += `bg-green-100 text-green-700`;
+  }
+  return <span className={className}>{captalize(role.toLowerCase())}</span>;
+}
+
+function captalize(str) {
+  if (!str) return ""; // Manejar cadenas vacías o nulas
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
