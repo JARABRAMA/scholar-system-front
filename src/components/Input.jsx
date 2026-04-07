@@ -13,7 +13,7 @@ export function Input({
         {required && <span className="text-red-500 "> *</span>}
       </div>
       <input
-        className="py-1 px-3 bg-white border border-stone-300 rounded-md focus:outline-blue-500 shadow-sm shadow-stone-300"
+        className="py-1 px-3 bg-white text-stone-900 border border-stone-900 rounded-md focus:outline-blue-500 shadow-sm shadow-stone-300"
         name={name}
         type={type}
         required={required}

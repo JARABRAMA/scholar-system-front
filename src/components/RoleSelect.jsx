@@ -2,6 +2,7 @@ export function RoleSelect({
   label = false,
   className = "",
   onInput = () => {},
+  name = "role",
 }) {
   if (label) {
     return (
@@ -11,6 +12,7 @@ export function RoleSelect({
         </label>
 
         <select
+          name={name}
           onChange={(e) => {
             onInput(e.target.value);
           }}
@@ -26,6 +28,7 @@ export function RoleSelect({
   }
   return (
     <select
+      name={name}
       onChange={(e) => {
         onInput(e.target.value);
       }}

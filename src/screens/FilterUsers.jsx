@@ -4,6 +4,8 @@ import { RoleSelect } from "../components/RoleSelect.jsx";
 import { CitySelect } from "../components/CitySelect.jsx";
 import { useFilterUsers } from "../hooks/UseFilterUsers.jsx";
 import { Spinner } from "../components/Spinner.jsx";
+import { useNavigate } from "react-router";
+import { NavigationPaths } from "../navigation/NavigationPaths.jsx";
 
 export function FilterUsers() {
   const { users, loading, error, onSetSearch, onSetRole } = useFilterUsers();
@@ -51,15 +53,16 @@ function SearchBar({ setRoles, setSearch }) {
         onInput={setRoles}
         className="bg-white border border-stone-300 rounded-2xl ring-0 outline-0 shadow-md shadow-stone-200 py-2.5"
       />
-      <CitySelect
+      {/* <CitySelect
         className="bg-white border border-stone-300 rounded-2xl ring-0 outline-0 shadow-md shadow-stone-200 py-2.5"
         py-2
-      />
+      /> */}
     </div>
   );
 }
 
 function Content({ setRoles, setSearch, users, loading }) {
+  const navigate = useNavigate();
   return (
     <section className="py-8 px-12 flex flex-col">
       <div className="flex justify-between items-center mb-4">
@@ -69,7 +72,10 @@ function Content({ setRoles, setSearch, users, loading }) {
             Administra estudiantes, docentes y administradores.
           </span>
         </div>
-        <Button className="bg-blue-600 text-white flex items-center px-3 gap-2 hover:outline-0">
+        <Button
+          onClick={() => navigate(NavigationPaths.NEW_USER)}
+          className="bg-blue-600 text-white flex items-center px-3 gap-2 hover:outline-0"
+        >
           <svg className="size-8 p-0 m-0">
             <use href="/sprite.svg#plus"> </use>
           </svg>

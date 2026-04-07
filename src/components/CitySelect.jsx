@@ -1,34 +1,50 @@
-export function CitySelect({ label = false, className = "" }) {
+export function CitySelect({
+  name = "city",
+  label,
+  className = "",
+  values = [],
+  onSelect = () => {},
+  disabled = false,
+}) {
+  const disabledClassName = disabled ? "text-stone-400" : "";
   if (label) {
     return (
-      <div className={`flex flex-col ${className}`}>
-        label && (
-        <label>
-          Ciudad de residencia <span className="text-red-500">*</span>
-        </label>
-        )
-        <select name="city" className="border rounded-md h-fit p-1.5">
-          <option value="">Seleccionar ciudad</option>
-          <option value="Mediellin">Medellin</option>
-          <option value="">Bogota</option>
-          <option value="">Cali</option>
-          <option value="">Carepa</option>
-          <option value="">Chigorodo</option>
+      <div className={`flex flex-col ${className} ${disabledClassName}`}>
+        {label && (
+          <label>
+            {label}
+            <span className="text-red-500">*</span>
+          </label>
+        )}
+        <select
+          disabled={disabled}
+          name={name}
+          className="border rounded-md h-fit p-1.5"
+          onChange={(e) => onSelect(e.target.value)}
+        >
+          <option value="">Elige una opcion</option>
+          {values.map((dpt, index) => (
+            <option id={index} value={dpt}>
+              {dpt}
+            </option>
+          ))}
         </select>
       </div>
     );
   }
   return (
     <select
-      name="city"
+      disabled={disabled}
+      name={name}
       className={`border rounded-md h-fit p-1.5 ${className}`}
+      onChange={(e) => onSelect(e.target.value)}
     >
       <option value="">Seleccionar ciudad</option>
-      <option value="Mediellin">Medellin</option>
-      <option value="">Bogota</option>
-      <option value="">Cali</option>
-      <option value="">Carepa</option>
-      <option value="">Chigorodo</option>
+      {values.map((dpt, index) => (
+        <option id={index} value={dpt}>
+          {dpt}
+        </option>
+      ))}
     </select>
   );
 }
