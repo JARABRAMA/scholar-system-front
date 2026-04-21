@@ -8,18 +8,16 @@ import { PrivateRoute } from "./components/PrivateRoute.jsx";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <TobBar />
-        <Routes>
-          <Route path="/" element={<Aouth />} />
-          <Route element={<PrivateRoute allowedRoles={["ADMINISTRADOR"]} />}>
-            <Route path="/users/new" element={<NewUser />} />
-            <Route path="/users" element={<FilterUsers />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <TobBar />
+      <Routes>
+        <Route path="/" element={<Aouth />} />
+        <Route element={<PrivateRoute allowedRoles={["ADMINISTRADOR"]} />}>
+          <Route path="/users/new" element={<NewUser />} />
+          <Route path="/users" element={<FilterUsers />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
