@@ -8,7 +8,7 @@ export function useNewUser() {
   const [chosenDepartment, setChosenDepartment] = useState();
   const [departments, setDepartments] = useState();
   const [municipalities, setMunicipalities] = useState();
-  const [Error, setError] = useState();
+  const [error, setError] = useState();
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const accessToken = useLoginStore((state) => state.accessToken);
   const navigate = useNavigate();
@@ -92,5 +92,6 @@ export function useNewUser() {
     loading,
     onSubmitForm,
     chosenDepartment,
+    error,
   };
 }
