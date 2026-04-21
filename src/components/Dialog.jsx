@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export function Dialog({ open, className }) {
+export function Dialog({ open, className, children }) {
   const dialogRef = useRef();
   // close and open dialog
   useEffect(() => {
@@ -11,7 +11,10 @@ export function Dialog({ open, className }) {
     }
   }, [open]);
   return (
-    <dialog className={className} ref={dialogRef}>
+    <dialog
+      className={`m-auto w-1/3 h-1/3 rounded-xl border-2 border-stone-400 open:flex open:flex-1 ${className}`}
+      ref={dialogRef}
+    >
       {children}
     </dialog>
   );
