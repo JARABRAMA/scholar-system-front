@@ -93,24 +93,23 @@ function NewUserForm({
       <div className="grid grid-cols-2 gap-y-4 gap-x-4 flex-1">
         <Input
           name="fullName"
-          children="Nombre completo"
           required={true}
           placeholder="e.g. Pepito Juarez Campuzano"
           desciption="Mínimo 2 palabras, máximo 4. Sin caracteres especiales."
-        />
+        >
+          Nombre Completo
+        </Input>
         <Input
           name="email"
-          children="Correo electronico"
           required={true}
           placeholder="e.g pepito.juarez@gmail.com"
           desciption="Debe terminar en @gmail.com"
-        />
-        <Input
-          name="birthDate"
-          children="Fecha de nacimiento"
-          required={true}
-          type="date"
-        />
+        >
+          Correo Electrónico
+        </Input>
+        <Input name="birthDate" required={true} type="date">
+          Fecha de nacimiento
+        </Input>
         <RoleSelect label={true} name="roleName" />
         <CitySelect
           name="department"
@@ -126,11 +125,12 @@ function NewUserForm({
         />
         <Input
           name="password"
-          children="Contraseña"
           required={true}
           placeholder="************"
           desciption="Min. 8 caracteres, una mayúscula y un número o carácter especial."
-        />
+        >
+          Contraseña
+        </Input>
       </div>
       <Button className="bg-blue-600 text-white self-end">Crear Usuario</Button>
     </form>
