@@ -15,8 +15,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Aouth />} />
         <Route element={<PrivateRoute allowedRoles={["ADMINISTRADOR"]} />}>
-          <Route path="/users/new" element={<NewUser />} />
-          <Route path="/users" element={<FilterUsers />} />
+          <Route path={NavigationPaths.NEW_USER} element={<NewUser />} />
+          <Route path={NavigationPaths.USERS} element={<FilterUsers />} />
         </Route>
 
         <Route path={NavigationPaths.COURSES} element={<CoursesScreen />} />
