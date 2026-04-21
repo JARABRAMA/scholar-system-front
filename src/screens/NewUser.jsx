@@ -4,8 +4,10 @@ import { Button } from "../components/Button";
 import { RoleSelect } from "../components/RoleSelect.jsx";
 import { CitySelect } from "../components/CitySelect.jsx";
 import { useNewUser } from "../hooks/UseNewUsers.jsx";
+import { Dialog } from "../components/Dialog.jsx";
+import { Spinner } from "../components/Spinner.jsx";
 
-export function NewUser({}) {
+export function NewUser() {
   const {
     departments,
     municipalities,
@@ -13,6 +15,7 @@ export function NewUser({}) {
     loading,
     onSubmitForm,
     chosenDepartment,
+    error,
   } = useNewUser();
   return (
     <main className="grid grid-cols-[auto_1fr]">
@@ -23,6 +26,8 @@ export function NewUser({}) {
         setChosenDepartment={onChoseDepartment}
         chosenDepartment={chosenDepartment}
         onSubmitForm={onSubmitForm}
+        loading={loading}
+        error={error}
       />
     </main>
   );
@@ -34,9 +39,28 @@ function Content({
   setChosenDepartment,
   chosenDepartment,
   onSubmitForm,
+  loading,
+  error,
 }) {
   return (
-    <section className="flex flex-col p-5 bg-stone-100 ">
+    <section className="flex flex-col p-5 bg-stone-100 h-full">
+      <Dialog open={loading || error}>
+        {loading && !error && (
+          <div className="flex flex-1 min-h-max items-center justify-center flex-col gap-7 ">
+            <span className="text-stone-900 text-xl">Cargando...</span>
+            <Spinner />
+          </div>
+        )}
+        {error && (
+          <div className="flex flex-1 min-h-max items-center justify-center flex-col gap-7">
+            <svg className="size-10 text-red-500">
+              <use href="/sprite.svg#error"></use>
+            </svg>
+            <span className="text-stone-900 text-xl">Error</span>
+            <span>{error}</span>
+          </div>
+        )}
+      </Dialog>
       <h2 className="text-2xl">Añadir nuevo usuario</h2>
       <p className="text-md text-stone-500">
         Completa el formulario para registrar un nuevo usuario a la plataforma
@@ -62,14 +86,11 @@ function NewUserForm({
 }) {
   return (
     <form
-      className=" bg-white p-6 rounded-xl my-5 
-    max-w-4xl shadow-sm shadow-stone-300 flex flex-col gap-4"
+      className="bg-white p-6 rounded-xl my-5 
+    flex flex-col gap-4 h-full"
       onSubmit={onSubmitForm}
     >
-      <div
-        className="grid grid-cols-2 gap-y-4 
-    gap-x-4"
-      >
+      <div className="grid grid-cols-2 gap-y-4 gap-x-4 flex-1">
         <Input
           name="fullName"
           children="Nombre completo"
