@@ -5,6 +5,8 @@ import { TobBar } from "./components/TopBar.jsx";
 import { NewUser } from "./screens/NewUser.jsx";
 import { FilterUsers } from "./screens/FilterUsers.jsx";
 import { PrivateRoute } from "./components/PrivateRoute.jsx";
+import { NavigationPaths } from "./navigation/NavigationPaths.jsx";
+import { CoursesScreen } from "./screens/CoursesScreen.jsx";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="/users/new" element={<NewUser />} />
           <Route path="/users" element={<FilterUsers />} />
         </Route>
+
+        <Route path={NavigationPaths.COURSES} element={<CoursesScreen />} />
       </Routes>
     </BrowserRouter>
   );
