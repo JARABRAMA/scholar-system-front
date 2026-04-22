@@ -1,22 +1,27 @@
-import { useState } from "react";
-
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { Aouth } from "./screens/Aouth.jsx";
 import { TobBar } from "./components/TopBar.jsx";
+import { NewUser } from "./screens/NewUser.jsx";
+import { FilterUsers } from "./screens/FilterUsers.jsx";
+import { PrivateRoute } from "./components/PrivateRoute.jsx";
+import { NavigationPaths } from "./navigation/NavigationPaths.jsx";
+import { CoursesScreen } from "./screens/CoursesScreen.jsx";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
+    <BrowserRouter>
       <TobBar />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Aouth />} />
-        </Routes>
-      </BrowserRouter>
-    </>
+      <Routes>
+        <Route path="/" element={<Aouth />} />
+        <Route element={<PrivateRoute allowedRoles={["ADMINISTRADOR"]} />}>
+          <Route path={NavigationPaths.NEW_USER} element={<NewUser />} />
+          <Route path={NavigationPaths.USERS} element={<FilterUsers />} />
+        </Route>
+
+        <Route path={NavigationPaths.COURSES} element={<CoursesScreen />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

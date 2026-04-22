@@ -1,9 +1,15 @@
 import { Button } from "./Button";
 import { Link } from "react-router";
+import { Input } from "./Input";
+import { useLogin } from "../hooks/UseLogin";
 
 export function LoginForm() {
+  const { onLogin, error } = useLogin();
   return (
-    <article className="bg-gray-200 w-md rounded-2xl px-5  py-4 flex flex-col gap-3">
+    <article
+      className="w-md rounded-2xl px-5  py-6 flex flex-col gap-3 
+    bg-stone-200 border-2 border-stone-300 shadow-md shadow-stone-300/80"
+    >
       <div>
         <h2 className="text-3xl font-bold m-0 p-0">Bienvenido de Vuelta</h2>
         <small className="text-sm text-gray-500">
@@ -11,7 +17,7 @@ export function LoginForm() {
         </small>
       </div>
 
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={onLogin}>
         <Input
           name="email"
           placeholder="user@gmail.com"
@@ -29,6 +35,7 @@ export function LoginForm() {
         >
           Contraseña
         </Input>
+        {error && <span className="text-red-400 self-center">{error}</span>}
         <Button className="bg-blue-700 text-gray-100 hover:bg-blue-600 border-0 hover:outline-0">
           Iniciar Sesión
         </Button>
@@ -38,23 +45,5 @@ export function LoginForm() {
         </Link>
       </form>
     </article>
-  );
-}
-
-function Input({ children, placeholder, type, name, required }) {
-  return (
-    <div className="flex flex-col">
-      <div>
-        <label>{children}</label>
-        {required && <span className="text-red-500 "> *</span>}
-      </div>
-      <input
-        className="border rounded-md py-1 px-2"
-        name={name}
-        type={type}
-        required={required}
-        placeholder={placeholder}
-      />
-    </div>
   );
 }
