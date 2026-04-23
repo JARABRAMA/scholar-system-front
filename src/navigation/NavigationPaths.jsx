@@ -4,4 +4,5 @@ export const NavigationPaths = {
   LOGIN: "/",
   COURSES: "/courses",
   COURSE_DETAIL: "/courses/:courseId",
+  PROFILE: "/profile/:id",
 };
