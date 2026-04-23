@@ -11,7 +11,7 @@ export function FilterUsers() {
   const { users, loading, error, onSetSearch, onSetRole } = useFilterUsers();
 
   return (
-    <main className="grid grid-cols-[auto_1fr] bg-stone-100">
+    <main className="grid grid-cols-[auto_1fr] bg-stone-100 overflow-hidden">
       <SideBar />
       <Content
         setRoles={onSetRole}
@@ -64,7 +64,7 @@ function SearchBar({ setRoles, setSearch }) {
 function Content({ setRoles, setSearch, users, loading }) {
   const navigate = useNavigate();
   return (
-    <section className="py-8 px-12 flex flex-col">
+    <section className="py-8 px-12 flex flex-1 flex-col overflow-y-scroll">
       <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-4xl">Gestionar Usuarios</h2>
@@ -100,7 +100,7 @@ function UsersList({ users, loading }) {
   return (
     <section
       className="flex flex-col border border-stone-400 rounded-xl pt-2 shadow-md
-     shadow-stone-300 flex-1 overflow-y-auto mt-6"
+     shadow-stone-300 flex-1 mt-6"
     >
       <div className="grid grid-cols-4 border-b border-stone-400  px-4">
         <span className="text-stone-600 justify-self-center slef-center">
@@ -119,25 +119,7 @@ function UsersList({ users, loading }) {
 
       {users &&
         !loading &&
-        users.map((user) => {
-          return (
-            <div
-              className="grid grid-cols-4 text-stone-900 border-b px-4 border-stone-400 
-              last:border-b-0  bg-white hover:bg-stone-100 py-2 justify-between"
-              key={user.id}
-            >
-              <strong className="self-center">{user.fullName}</strong>
-              <RoleSpan role={user.role} />
-              <span className="self-center justify-self-center">{`${user.municipality} - ${user.department}`}</span>
-              <span
-                className="bg-blue-200 text-blue-700 rounded-full w-fit 
-              h-fit self-center justify-self-center px-3 py-.5"
-              >
-                {user.email}
-              </span>
-            </div>
-          );
-        })}
+        users.map((user) => <UserCard key={user.id} user={user} />)}
 
       {loading && (
         <div className="flex flex-1 items-center justify-center">
@@ -145,6 +127,30 @@ function UsersList({ users, loading }) {
         </div>
       )}
     </section>
+  );
+}
+
+function UserCard({ user }) {
+  const navigate = useNavigate();
+  const onClick = () => {
+    navigate(`/profile/${user.id}`);
+  };
+  return (
+    <div
+      className="grid grid-cols-4 text-stone-900 border-b px-4 border-stone-400 
+              last:border-b-0  bg-white hover:bg-stone-100 py-2 justify-between"
+      onClick={onClick}
+    >
+      <strong className="self-center">{user.fullName}</strong>
+      <RoleSpan role={user.role} />
+      <span className="self-center justify-self-center">{`${user.municipality} - ${user.department}`}</span>
+      <span
+        className="bg-blue-200 text-blue-700 rounded-full w-fit 
+              h-fit self-center justify-self-center px-3 py-.5"
+      >
+        {user.email}
+      </span>
+    </div>
   );
 }
 
