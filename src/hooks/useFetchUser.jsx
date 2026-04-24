@@ -1,4 +1,8 @@
-function useFetchUser() {
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { useLoginStore } from "../store/LoginStore";
+
+export function useFetchUser() {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const { id: userId } = useParams();
   const accessToken = useLoginStore((state) => state.accessToken);
