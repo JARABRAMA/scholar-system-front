@@ -16,6 +16,27 @@ export function useEditUser() {
     chosenDepartment,
   } = useFetchCities();
 
+  const onSubmitForm = (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target).entries());
+    const editedUser = { ...user };
+
+    if (data.fullName !== "") {
+      editedUser.fullName = data.fullName;
+    }
+    if (data.birthDate !== "") {
+      editedUser.birthDate = data.birthDate;
+    }
+    if (data.email !== "") {
+      editedUser.email = data.email;
+    }
+    if (data.municipality !== "" && data.departments !== "") {
+      editedUser.municipality = data.municipality;
+      editedUser.department = data.department;
+    }
+    console.log(editedUser);
+  };
+
   return {
     user,
     error,
@@ -24,6 +45,7 @@ export function useEditUser() {
     onChoseDepartment,
     loading: userLoading || citiesLoading,
     chosenDepartment,
+    onSubmitForm,
   };
 }
 
@@ -36,6 +58,7 @@ export function EditUser() {
     onChoseDepartment,
     loading,
     chosenDepartment,
+    onSubmitForm,
   } = useEditUser();
   return (
     <main className="grid grid-cols-[auto_1fr]">
@@ -48,6 +71,7 @@ export function EditUser() {
         municipalities={municipalities}
         onChoseDepartment={onChoseDepartment}
         chosenDepartment={chosenDepartment}
+        onSubmitForm={onSubmitForm}
       />
     </main>
   );
@@ -61,6 +85,7 @@ function Content({
   municipalities,
   onChoseDepartment,
   chosenDepartment,
+  onSubmitForm,
 }) {
   return (
     <>
@@ -82,15 +107,19 @@ function Content({
             <article className="flex flex-col bg-white border border-stone-300 rounded-xl p-8">
               <form
                 className="grid grid-cols-2 gap-x-8 border-b-2 pb-8 border-stone-300"
-                onSubmit={(e) => e.preventDefault()}
+                onSubmit={(e) => onSubmitForm(e)}
               >
-                <Input required={true} placeholder={user.fullName}>
+                <Input name="fullName" placeholder={user.fullName}>
                   Nombre Completo
                 </Input>
-                <Input required={true} placeholder={user.email}>
+                <Input name="email" type="email" placeholder={user.email}>
                   Correo Electronico
                 </Input>
-                <Input required={true} placeholder={user.birthDate} type="date">
+                <Input
+                  name="brithDate"
+                  placeholder={user.birthDate}
+                  type="date"
+                >
                   Fecha de nacimiento
                 </Input>
                 <CitySelect
@@ -105,14 +134,13 @@ function Content({
                   label="Municipio de residencia"
                   values={municipalities}
                 />
+                <div className="flex justify-end gap-8 mt-8">
+                  <Button className="border">Cancelar</Button>
+                  <Button type="submit" className="bg-blue-600 text-white">
+                    Guardar cambios
+                  </Button>
+                </div>
               </form>
-
-              <div className="flex justify-end gap-8 mt-8">
-                <Button className="border">Cancelar</Button>
-                <Button className="bg-blue-600 text-white">
-                  Guardar cambios
-                </Button>
-              </div>
             </article>
           </div>
         </section>
