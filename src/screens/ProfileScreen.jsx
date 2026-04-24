@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { useLoginStore } from "../store/LoginStore";
 import { SideBar } from "../components/SideBar";
 import { Spinner } from "../components/Spinner";
 import { RolePill } from "../components/RolePill.jsx";
 import { Button } from "../components/Button.jsx";
-import { useFetchUser } from "../hooks/useFetchUser.jsx";
+import { useFetchUser } from "../hooks/UseFetchUser.jsx";
 
 export function ProfileScreen() {
   const { user, error, loading } = useFetchUser();
