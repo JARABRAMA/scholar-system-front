@@ -2,9 +2,9 @@ import { Button } from "./Button";
 import { Link } from "react-router";
 import { Input } from "./Input";
 import { useLogin } from "../hooks/UseLogin";
-
+import { Spinner } from "../components/Spinner.jsx";
 export function LoginForm() {
-  const { onLogin, error } = useLogin();
+  const { onLogin, error, loading } = useLogin();
   return (
     <article
       className="w-md rounded-2xl px-5  py-6 flex flex-col gap-3 
@@ -35,8 +35,16 @@ export function LoginForm() {
         >
           Contraseña
         </Input>
+        {loading && (
+          <div className="flex items-center justify-center">
+            <Spinner />
+          </div>
+        )}
         {error && <span className="text-red-400 self-center">{error}</span>}
-        <Button className="bg-blue-700 text-gray-100 hover:bg-blue-600 border-0 hover:outline-0">
+        <Button
+          type="submit"
+          className="bg-blue-700 text-gray-100 hover:bg-blue-600 border-0 hover:outline-0"
+        >
           Iniciar Sesión
         </Button>
 
