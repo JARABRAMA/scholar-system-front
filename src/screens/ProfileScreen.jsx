@@ -1,51 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useLoginStore } from "../store/LoginStore";
 import { SideBar } from "../components/SideBar";
 import { Spinner } from "../components/Spinner";
 import { RolePill } from "../components/RolePill.jsx";
 import { Button } from "../components/Button.jsx";
-
-function useProfile() {
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const { id: userId } = useParams();
-  const accessToken = useLoginStore((state) => state.accessToken);
-  const [user, setUser] = useState();
-  const [error, setError] = useState();
-  const [loading, setLoading] = useState(true);
-
-  // fetch user from api
-  useEffect(() => {
-    if (!accessToken || !userId) return;
-
-    const fetchUser = async () => {
-      setLoading(true);
-      const res = await fetch(`${BASE_URL}/users/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setUser(data);
-      } else {
-        setError(data);
-      }
-      setLoading(false);
-    };
-    fetchUser();
-  }, [userId, accessToken]);
-
-  return {
-    user,
-    error,
-    loading,
-  };
-}
+import { useFetchUser } from "../hooks/useFetchUser.jsx";
 
 export function ProfileScreen() {
-  const { user, error, loading } = useProfile();
+  const { user, error, loading } = useFetchUser();
   return (
     <main className="grid grid-cols-[auto_1fr]">
       <SideBar />
@@ -55,6 +18,8 @@ export function ProfileScreen() {
 }
 
 function Content({ user, loading, error }) {
+  const navigate = useNavigate();
+  const onEdit = () => navigate(`/users/edit/${user.id}`);
   return (
     <>
       {!user && loading && (
@@ -87,7 +52,10 @@ function Content({ user, loading, error }) {
                   </svg>
                   Eliminar
                 </Button>
-                <Button className={"flex border-black border text-black gap-1"}>
+                <Button
+                  onClick={onEdit}
+                  className={"flex border-black border text-black gap-1"}
+                >
                   <svg className="size-5">
                     <use href="./sprite.svg#bin" />
                   </svg>
