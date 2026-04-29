@@ -7,7 +7,8 @@ import { FilterUsers } from "./screens/FilterUsers.jsx";
 import { PrivateRoute } from "./components/PrivateRoute.jsx";
 import { NavigationPaths } from "./navigation/NavigationPaths.jsx";
 import { CoursesScreen } from "./screens/CoursesScreen.jsx";
-
+import { ProfileScreen } from "./screens/ProfileScreen.jsx";
+import { EditUser } from "./screens/EditUser.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -18,6 +19,8 @@ function App() {
           <Route path={NavigationPaths.NEW_USER} element={<NewUser />} />
           <Route path={NavigationPaths.USERS} element={<FilterUsers />} />
         </Route>
+        <Route path={NavigationPaths.PROFILE} element={<ProfileScreen />} />
+        <Route path={NavigationPaths.EDIT_USER} element={<EditUser />} />
 
         <Route path={NavigationPaths.COURSES} element={<CoursesScreen />} />
       </Routes>

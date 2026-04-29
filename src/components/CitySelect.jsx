@@ -19,7 +19,7 @@ export function CitySelect({
         <select
           disabled={disabled}
           name={name}
-          className="border rounded-md h-fit p-1.5"
+          className="border bg-white rounded-md h-fit p-1.5"
           onChange={(e) => onSelect(e.target.value)}
         >
           <option value="">Elige una opcion</option>

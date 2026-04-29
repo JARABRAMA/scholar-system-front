@@ -1,66 +1,27 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLoginStore } from "../store/LoginStore.jsx";
 import { useNavigate } from "react-router";
 import { NavigationPaths } from "../navigation/NavigationPaths.jsx";
+import { useFetchCities } from "./UseFetchCities.jsx";
 
 export function useNewUser() {
-  const [loading, setLoading] = useState(true);
-  const [chosenDepartment, setChosenDepartment] = useState();
-  const [departments, setDepartments] = useState();
-  const [municipalities, setMunicipalities] = useState();
+  const {
+    departments,
+    municipalities,
+    onChoseDepartment,
+    loading,
+    onSetLoading,
+    chosenDepartment,
+  } = useFetchCities();
   const [error, setError] = useState();
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const accessToken = useLoginStore((state) => state.accessToken);
+
   const navigate = useNavigate();
-
-  // load departments.
-  useEffect(() => {
-    setLoading(true);
-    const fetchDepartments = async () => {
-      const res = await fetch(`${baseUrl}/city/departments`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setDepartments(data);
-      }
-      setLoading(false);
-    };
-    fetchDepartments();
-  }, [baseUrl, accessToken]);
-
-  // load municipalities
-  useEffect(() => {
-    const fetchMunicipalities = async () => {
-      const res = await fetch(
-        `${baseUrl}/city/municipalities/${chosenDepartment}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      const data = await res.json();
-      console.log("municipios: ", data);
-      if (res.ok) {
-        setMunicipalities(data);
-      }
-    };
-    if (!chosenDepartment || chosenDepartment == "") {
-      setMunicipalities(undefined);
-    } else {
-      fetchMunicipalities();
-    }
-  }, [chosenDepartment, baseUrl, accessToken]);
 
   const onSubmitForm = async (event) => {
     event.preventDefault();
-    setLoading(true);
+    onSetLoading(true);
     const newUser = Object.fromEntries(new FormData(event.target).entries());
     console.log(newUser);
     const res = await fetch(`${baseUrl}/users`, {
@@ -78,20 +39,16 @@ export function useNewUser() {
     } else {
       setError(data.detail);
     }
-    setLoading(false);
-  };
-  const onChoseDepartment = (dept) => {
-    console.log("change departament: ", dept);
-    setChosenDepartment(dept);
+    onSetLoading(false);
   };
 
   return {
+    onSubmitForm,
+    error,
     departments,
     municipalities,
     onChoseDepartment,
     loading,
-    onSubmitForm,
     chosenDepartment,
-    error,
   };
 }

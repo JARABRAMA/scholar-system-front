@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useLoginStore } from "../store/LoginStore.jsx";
 import { useState } from "react";
 
@@ -7,7 +7,10 @@ export function useLogin() {
   const login = useLoginStore((state) => state.login);
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const onLogin = async (event) => {
+    setLoading(true);
     event.preventDefault();
     const formData = new FormData(event.target);
 
@@ -27,7 +30,8 @@ export function useLogin() {
       navigate("/users");
       return;
     }
+    setLoading(false);
     setError(data.detail);
   };
-  return { onLogin, error };
+  return { onLogin, error, loading };
 }

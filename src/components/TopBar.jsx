@@ -1,6 +1,7 @@
 import { useLoginStore } from "../store/LoginStore";
 import { Button } from "./Button";
 import { useNavigate } from "react-router";
+import { RolePill } from "./RolePill";
 
 export function TobBar() {
   const role = useLoginStore((state) => state.role);
@@ -39,15 +40,4 @@ function SingOutButton({ isLogged, onLogout }) {
       </Button>
     );
   }
-}
-
-function RolePill({ role }) {
-  return (
-    <div
-      className="bg-gray-900/50 flex items-center jstify-center align-center
-      px-3 py-1 rounded-full border text-gray-600 w-fit h-fit"
-    >
-      <span className="p-0 m-0 w-fit">{role}</span>
-    </div>
-  );
 }
