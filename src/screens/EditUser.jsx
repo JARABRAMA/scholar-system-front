@@ -1,6 +1,6 @@
 import { SideBar } from "../components/SideBar.jsx";
 import { Input } from "../components/Input.jsx";
-import { useFetchUser } from "../hooks/UseFetchUser.jsx";
+import { useFetchUser } from "../hooks/useFetchUser.jsx";
 import { Spinner } from "../components/Spinner.jsx";
 import { useFetchCities } from "../hooks/UseFetchCities.jsx";
 import { CitySelect } from "../components/CitySelect.jsx";

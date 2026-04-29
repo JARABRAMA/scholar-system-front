@@ -4,7 +4,7 @@ import { SideBar } from "../components/SideBar";
 import { Spinner } from "../components/Spinner";
 import { RolePill } from "../components/RolePill.jsx";
 import { Button } from "../components/Button.jsx";
-import { useFetchUser } from "../hooks/UseFetchUser.jsx";
+import { useFetchUser } from "../hooks/useFetchUser.jsx";
 
 export function ProfileScreen() {
   const { user, error, loading } = useFetchUser();

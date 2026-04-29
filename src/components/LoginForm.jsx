@@ -1,7 +1,7 @@
 import { Button } from "./Button";
 import { Link } from "react-router";
 import { Input } from "./Input";
-import { useLogin } from "../hooks/UseLogin";
+import { useLogin } from "../hooks/UseLogin.jsx";
 import { Spinner } from "../components/Spinner.jsx";
 export function LoginForm() {
   const { onLogin, error, loading } = useLogin();
