@@ -5,9 +5,20 @@ import { Spinner } from "../components/Spinner.jsx";
 import { useFetchCities } from "../hooks/UseFetchCities.jsx";
 import { CitySelect } from "../components/CitySelect.jsx";
 import { Button } from "../components/Button.jsx";
+import { useLoginStore } from "../store/LoginStore.jsx";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { NavigationPaths } from "../navigation/NavigationPaths.jsx";
+import { useRef } from "react";
 
 export function useEditUser() {
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const accesToken = useLoginStore((state) => state.accessToken);
+  const [updatingLoading, setUpdateLoading] = useState(false);
+  const [updatingError, setUpdateError] = useState();
   const { user, loading: userLoading, error } = useFetchUser();
+  const navigate = useNavigate();
+
   const {
     departments,
     municipalities,
@@ -16,25 +27,36 @@ export function useEditUser() {
     chosenDepartment,
   } = useFetchCities();
 
-  const onSubmitForm = (event) => {
+  const onSubmitForm = async (event) => {
+    setUpdateLoading(true);
     event.preventDefault();
-    const data = Object.fromEntries(new FormData(event.target).entries());
-    const editedUser = { ...user };
+    const formData = Object.fromEntries(new FormData(event.target).entries());
 
-    if (data.fullName !== "") {
-      editedUser.fullName = data.fullName;
+    const updatePayload = {
+      fullName: formData.fullName || user.fullName,
+      email: formData.email || user.email,
+      birthDate: formData.birthDate || user.birthDate,
+      department: formData.department || user.department,
+      municipality: formData.municipality || user.municipality,
+    };
+
+    const response = await fetch(`${BASE_URL}/${user.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accesToken}`,
+      },
+      body: JSON.stringify(updatePayload),
+    });
+
+    const dataResponse = await response.json();
+
+    if (response.ok) {
+      navigate(NavigationPaths.USERS);
+    } else {
+      setUpdateError(dataResponse);
+      setUpdateLoading(false);
     }
-    if (data.birthDate !== "") {
-      editedUser.birthDate = data.birthDate;
-    }
-    if (data.email !== "") {
-      editedUser.email = data.email;
-    }
-    if (data.municipality !== "" && data.departments !== "") {
-      editedUser.municipality = data.municipality;
-      editedUser.department = data.department;
-    }
-    console.log(editedUser);
   };
 
   return {
@@ -46,10 +68,32 @@ export function useEditUser() {
     loading: userLoading || citiesLoading,
     chosenDepartment,
     onSubmitForm,
+    updatingError,
+    updatingLoading,
+    onDissmissError: () => setUpdateError(undefined),
   };
 }
 
 export function EditUser() {
+  return (
+    <main className="grid grid-cols-[auto_1fr]">
+      <SideBar />
+      <Content />
+    </main>
+  );
+}
+
+function ErrorMessage({ title, description, onDissmiss }) {
+  return (
+    <>
+      <span>{title}</span>
+      <span>{description}</span>
+      {onDissmiss && <Button onClick={onDissmiss}>Reintentar</Button>}
+    </>
+  );
+}
+
+function Content() {
   const {
     user,
     error,
@@ -59,39 +103,38 @@ export function EditUser() {
     loading,
     chosenDepartment,
     onSubmitForm,
+    updatingError,
+    updatingLoading,
+    onDissmissError,
   } = useEditUser();
-  return (
-    <main className="grid grid-cols-[auto_1fr]">
-      <SideBar />
-      <Content
-        user={user}
-        loading={loading}
-        error={error}
-        departments={departments}
-        municipalities={municipalities}
-        onChoseDepartment={onChoseDepartment}
-        chosenDepartment={chosenDepartment}
-        onSubmitForm={onSubmitForm}
-      />
-    </main>
-  );
-}
+  const dialogRef = useRef();
 
-function Content({
-  user,
-  loading,
-  error,
-  departments,
-  municipalities,
-  onChoseDepartment,
-  chosenDepartment,
-  onSubmitForm,
-}) {
+  useEffect(() => {
+    if (error) {
+      dialogRef.current.showModal();
+    } else {
+      dialogRef.current.close();
+    }
+  }, [error, dialogRef]);
+
   return (
     <>
+      <dialog ref={dialogRef}>
+        {updatingError && (
+          <ErrorMessage
+            title={updatingError.title}
+            description={updatingError.detail}
+          />
+        )}
+      </dialog>
+      {error && (
+        <div className="flex flex-1 bg-stone-100 items-center justify-center">
+          <ErrorMessage title={error.title} description={error.detail} />
+        </div>
+      )}
       {loading && (
         <div className="flex flex-1 bg-stone-100 items-center justify-center">
-          <Spinner />{" "}
+          <Spinner />
         </div>
       )}
       {user && !loading && !error && (
@@ -105,35 +148,39 @@ function Content({
               </span>
             </div>
             <article className="flex flex-col bg-white border border-stone-300 rounded-xl p-8">
-              <form
-                className="grid grid-cols-2 gap-x-8 border-b-2 pb-8 border-stone-300"
-                onSubmit={(e) => onSubmitForm(e)}
-              >
-                <Input name="fullName" placeholder={user.fullName}>
-                  Nombre Completo
-                </Input>
-                <Input name="email" type="email" placeholder={user.email}>
-                  Correo Electronico
-                </Input>
-                <Input
-                  name="brithDate"
-                  placeholder={user.birthDate}
-                  type="date"
-                >
-                  Fecha de nacimiento
-                </Input>
-                <CitySelect
-                  name="department"
-                  label="Departamento de residencia"
-                  values={departments}
-                  onSelect={onChoseDepartment}
-                />
-                <CitySelect
-                  disabled={!chosenDepartment || chosenDepartment === ""}
-                  name="municipality"
-                  label="Municipio de residencia"
-                  values={municipalities}
-                />
+              <form className="pb-8 " onSubmit={(e) => onSubmitForm(e)}>
+                <section className="grid grid-cols-2 gap-x-8 border-b-2 border-stone-300 pb-8">
+                  <Input name="fullName" placeholder={user.fullName}>
+                    Nombre Completo
+                  </Input>
+                  <Input name="email" type="email" placeholder={user.email}>
+                    Correo Electronico
+                  </Input>
+                  <Input
+                    name="birthDate"
+                    placeholder={user.birthDate}
+                    type="date"
+                  >
+                    Fecha de nacimiento
+                  </Input>
+                  <CitySelect
+                    name="department"
+                    label="Departamento de residencia"
+                    values={departments}
+                    onSelect={onChoseDepartment}
+                  />
+                  <CitySelect
+                    disabled={!chosenDepartment || chosenDepartment === ""}
+                    name="municipality"
+                    label="Municipio de residencia"
+                    values={municipalities}
+                  />
+                </section>
+                {updatingLoading && (
+                  <div className="flex my-8 items-center justify-center">
+                    <Spinner />
+                  </div>
+                )}
                 <div className="flex justify-end gap-8 mt-8">
                   <Button className="border">Cancelar</Button>
                   <Button type="submit" className="bg-blue-600 text-white">
