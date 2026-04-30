@@ -40,7 +40,7 @@ export function useEditUser() {
       municipality: formData.municipality || user.municipality,
     };
 
-    const response = await fetch(`${BASE_URL}/${user.id}`, {
+    const response = await fetch(`${BASE_URL}/users/${user.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
