@@ -7,16 +7,36 @@ import { useNavigate } from "react-router";
 import { NavigationPaths } from "../navigation/NavigationPaths.jsx";
 
 export function FilterUsers() {
-  const { users, loading, error, onSetSearch, onSetRole } = useFilterUsers();
+  const {
+    users,
+    loading,
+    error,
+    onSetSearch,
+    onSetRole,
+    onSetPage,
+    onNextPage,
+    onPreviousPage,
+    isFirstPage,
+    isLastPage,
+    totalPages,
+    currentPage,
+  } = useFilterUsers();
 
   return (
-    <main className="grid grid-cols-[auto_1fr] bg-stone-100 overflow-hidden">
+    <main className="grid grid-cols-[auto_1fr] overflow-hidden">
       <SideBar />
       <Content
         setRoles={onSetRole}
         setSearch={onSetSearch}
         users={users}
         loading={loading}
+        onSetPage={onSetPage}
+        onNextPage={onNextPage}
+        onPreviousPage={onPreviousPage}
+        isFirstPage={isFirstPage}
+        isLastPage={isLastPage}
+        totalPages={totalPages}
+        currentPage={currentPage}
       />
     </main>
   );
@@ -60,10 +80,22 @@ function SearchBar({ setRoles, setSearch }) {
   );
 }
 
-function Content({ setRoles, setSearch, users, loading }) {
+function Content({
+  setRoles,
+  setSearch,
+  users,
+  loading,
+  onSetPage,
+  onNextPage,
+  onPreviousPage,
+  isFirstPage,
+  isLastPage,
+  totalPages,
+  currentPage,
+}) {
   const navigate = useNavigate();
   return (
-    <section className="py-8 px-12 flex flex-1 flex-col overflow-y-scroll">
+    <section className="flex flex-col flex-1 overflow-hidden py-8 px-12">
       <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-4xl">Gestionar Usuarios</h2>
@@ -81,51 +113,106 @@ function Content({ setRoles, setSearch, users, loading }) {
           Añadir usuario
         </Button>
       </div>
-
       <div className="grid gap-4 grid-cols-4 my-2">
         <StatisticCard title={"TOTAL USUARIOS"} value={124} />
         <StatisticCard title={"ESTUDIANTES"} value={80} />
         <StatisticCard title={"DOCENTES"} value={30} />
         <StatisticCard title={"ADMINISTRADORES"} value={14} />
       </div>
-
       <SearchBar setRoles={setRoles} setSearch={setSearch} />
-      <UsersList users={users} loading={loading} />
+      <UsersList
+        users={users}
+        loading={loading}
+        onSetPage={onSetPage}
+        onNextPage={onNextPage}
+        onPreviousPage={onPreviousPage}
+        isFirstPage={isFirstPage}
+        isLastPage={isLastPage}
+        totalPages={totalPages}
+        currentPage={currentPage}
+      />
     </section>
   );
 }
 
-function UsersList({ users, loading }) {
+function UsersList({
+  users,
+  loading,
+  onSetPage,
+  onNextPage,
+  onPreviousPage,
+  isFirstPage,
+  isLastPage,
+  totalPages,
+  currentPage,
+}) {
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   return (
-    <section
-      className="flex flex-col border border-stone-400 rounded-xl pt-2 shadow-md
-     shadow-stone-300 flex-1 mt-6 overflow-y-auto"
-    >
-      <div className="grid grid-cols-4 border-b border-stone-400  px-4">
-        <span className="text-stone-600 justify-self-center slef-center">
-          NOMBRE
-        </span>
-        <span className="text-stone-600 justify-self-center slef-center">
-          ROL
-        </span>
-        <span className="text-stone-600 justify-self-center slef-center">
-          CIUDAD
-        </span>
-        <span className="text-stone-600 justify-self-center slef-center">
-          EMAIL
-        </span>
-      </div>
-
-      {users &&
-        !loading &&
-        users.map((user) => <UserCard key={user.id} user={user} />)}
-
-      {loading && (
-        <div className="flex flex-1 items-center justify-center">
-          <Spinner />
+    <div className="flex flex-col flex-1 overflow-hidden mt-6">
+      <section className="flex flex-col border border-stone-400 rounded-xl shadow-md flex-1 overflow-hidden">
+        <div className="grid grid-cols-4 border-b border-stone-400 px-4">
+          <span className="text-stone-600 justify-self-center slef-center">
+            NOMBRE
+          </span>
+          <span className="text-stone-600 justify-self-center slef-center">
+            ROL
+          </span>
+          <span className="text-stone-600 justify-self-center slef-center">
+            CIUDAD
+          </span>
+          <span className="text-stone-600 justify-self-center slef-center">
+            EMAIL
+          </span>
         </div>
-      )}
-    </section>
+
+        <div className="flex-1 overflow-y-auto">
+          {users &&
+            !loading &&
+            users.map((user) => <UserCard key={user.id} user={user} />)}
+
+          {loading && (
+            <div className="flex items-center justify-center h-full">
+              <Spinner />
+            </div>
+          )}
+        </div>
+      </section>
+      <div className="flex justify-center gap-2 mt-4">
+        <button
+          onClick={onPreviousPage}
+          disabled={isFirstPage}
+          className={`flex items-center justify-center  rounded-xl size-10
+           bg-blue-500 text-white  shadow-sm duration-300 active:scale-[.9] disabled:opacity-50 disabled:bg-white disabled:border disabled:text-black`}
+        >
+          <svg className="size-6">
+            <use href="/sprite.svg#navigate-previous" />
+          </svg>
+        </button>
+
+        {pages.map((p) => (
+          <button
+            disabled={currentPage + 1 === p}
+            key={p}
+            onClick={() => onSetPage(p - 1)}
+            className={`flex items-center justify-center  rounded-xl size-10
+           bg-blue-500 text-white  shadow-sm duration-300 active:scale-[.9] disabled:opacity-50 disabled:bg-black `}
+          >
+            {p}
+          </button>
+        ))}
+
+        <button
+          onClick={onNextPage}
+          disabled={isLastPage}
+          className={`flex items-center justify-center  rounded-xl size-10
+           bg-blue-500 text-white  shadow-sm duration-300 active:scale-[.9] disabled:opacity-50 disabled:bg-white disabled:border disabled:text-black`}
+        >
+          <svg className="size-6">
+            <use href="/sprite.svg#navigate-next" />
+          </svg>
+        </button>
+      </div>
+    </div>
   );
 }
 
