@@ -61,4 +61,20 @@
     <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
   </svg>
 
+  <svg id="navigate-previous"
+    fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-compact-left">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M13 20l-3 -8l3 -8" />
+  </svg>
+
+  <svg id="navigate-next"
+    fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-compact-right">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M11 4l3 8l-3 8" />
+  </svg>
+
 </svg>
