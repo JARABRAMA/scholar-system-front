@@ -26,7 +26,6 @@ export function SideBar() {
 function ProfileLink() {
   const userId = useLoginStore((state) => state.id);
   const location = useLocation();
-  console.log(location.pathname);
   const selected = location.pathname.startsWith("/profile");
   return (
     <Link
