@@ -1,7 +1,6 @@
 import { SideBar } from "../components/SideBar.jsx";
 import { Button } from "../components/Button.jsx";
 import { RoleSelect } from "../components/RoleSelect.jsx";
-import { CitySelect } from "../components/CitySelect.jsx";
 import { useFilterUsers } from "../hooks/UseFilterUsers.jsx";
 import { Spinner } from "../components/Spinner.jsx";
 import { useNavigate } from "react-router";
@@ -100,7 +99,7 @@ function UsersList({ users, loading }) {
   return (
     <section
       className="flex flex-col border border-stone-400 rounded-xl pt-2 shadow-md
-     shadow-stone-300 flex-1 mt-6"
+     shadow-stone-300 flex-1 mt-6 overflow-y-auto"
     >
       <div className="grid grid-cols-4 border-b border-stone-400  px-4">
         <span className="text-stone-600 justify-self-center slef-center">
