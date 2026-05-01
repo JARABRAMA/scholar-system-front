@@ -132,7 +132,9 @@ function NewUserForm({
           Contraseña
         </Input>
       </div>
-      <Button className="bg-blue-600 text-white self-end">Crear Usuario</Button>
+      <Button type="submit" className="bg-blue-600 text-white self-end">
+        Crear Usuario
+      </Button>
     </form>
   );
 }
