@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router";
-import { useLoginStore } from "../store/LoginStore";
 import { SideBar } from "../components/SideBar";
 import { Spinner } from "../components/Spinner";
 import { RolePill } from "../components/RolePill.jsx";
@@ -30,7 +29,7 @@ function Content({ user, loading, error }) {
         <section className="flex flex-col flex-1 bg-stone-100">
           <div className="flex flex-col rounded-xl border border-stone-300 bg-white p-8 gap-8 m-8">
             <div className="flex w-full h-fit gap-8 border-b border-stone-300 pt-4 pb-8 items-center">
-              <ProfileIcon />
+              <ProfileIcon fullName={user.fullName} />
               <div className="flex flex-col gap-1 align-center justify-center">
                 <span className="text-2xl">{user.fullName}</span>
                 <span className="text-md text-stone-500">{user.email}</span>
@@ -85,8 +84,7 @@ function UserField({ title, value }) {
   );
 }
 
-function ProfileIcon() {
-  const fullname = useLoginStore((state) => state.fullname);
+function ProfileIcon({ fullName }) {
   const getInitials = (str) =>
     str
       ?.split(" ")
@@ -100,7 +98,7 @@ function ProfileIcon() {
       className="rounded-full bg-linear-to-r from-cyan-500 to-blue-800
    text-white text-2xl size-16 flex items-center justify-center-safe"
     >
-      {getInitials(fullname)}
+      {getInitials(fullName)}
     </div>
   );
 }
