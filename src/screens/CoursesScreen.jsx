@@ -1,9 +1,12 @@
-import { SideBar } from "../components/SideBar";
-import { Button } from "../components/Button";
+import { SideBar } from "../components/SideBar.jsx";
+import { Button } from "../components/Button.jsx";
+import { Spinner } from "../components/Spinner.jsx";
+import { Pagination } from "../components/Pagination.jsx";
+import { useCourses } from "../hooks/useCourses.jsx";
 
 export function CoursesScreen() {
   return (
-    <main className="grid grid-cols-[auto_1fr] bg-stone-100">
+    <main className="grid grid-cols-[auto_1fr] bg-stone-100 overflow-y-hidden">
       <SideBar />
       <Content />
     </main>
@@ -11,38 +14,82 @@ export function CoursesScreen() {
 }
 
 function Content() {
+  const {
+    courses,
+    loading,
+    error,
+    onSetSearchText,
+    totalPages,
+    currentPage,
+    isLast,
+    isFirst,
+    onNextPage,
+    onPreviousPage,
+    onSetPage,
+  } = useCourses();
   return (
-    <section className="p-8 overflow-y-auto ">
+    <section className="p-8 overflow-y-hidden ">
       <h1 className="text-2xl font-bold">Gestionar Cursos</h1>
       <p className="text-stone-600">Oferta académica del semestre</p>
-      <SearchBar />
-      <CoursesGird />
+      <SearchBar onSetSearchText={onSetSearchText} />
+      <CoursesGird
+        courses={courses}
+        loading={loading}
+        error={error}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        isLast={isLast}
+        isFirst={isFirst}
+        onNextPage={onNextPage}
+        onPreviousPage={onPreviousPage}
+        onSetPage={onSetPage}
+      />
     </section>
   );
 }
 
-function CoursesGird() {
+function CoursesGird({
+  courses,
+  loading,
+  error,
+  totalPages,
+  currentPage,
+  isLast,
+  isFirst,
+  onNextPage,
+  onPreviousPage,
+  onSetPage,
+}) {
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   return (
-    <section className="my-8 course-grid gap-5 justify-between items-start ">
-      <CourseCard
-        code="CS101"
-        name="Introducción a la Programación"
-        ngroups={4}
-        credits={3}
+    <>
+      {loading && !courses && !error && (
+        <div className="flex flex-1 justify-center items-center">
+          <Spinner />
+        </div>
+      )}
+      <section className="my-8 course-grid gap-5 justify-between items-start overflow-y-auto ">
+        {courses &&
+          courses.map((c) => (
+            <CourseCard
+              key={c.code}
+              code={c.code}
+              name={c.name}
+              credits={c.credits}
+              ngroups={c.ngroups}
+            />
+          ))}
+      </section>
+      <Pagination
+        currentPage={currentPage}
+        isFirstPage={isFirst}
+        isLastPage={isLast}
+        onNextPage={onNextPage}
+        onPreviousPage={onPreviousPage}
+        onSetPage={onSetPage}
+        pages={pages}
       />
-      <CourseCard
-        code="CS101"
-        name="Introducción a la Programación"
-        ngroups={3}
-        credits={3}
-      />
-      <CourseCard
-        code="CS101"
-        name="Introducción a la Programación"
-        ngroups={2}
-        credits={3}
-      />
-    </section>
+    </>
   );
 }
 
@@ -71,13 +118,14 @@ function CourseCard({ code, name, credits, ngroups }) {
   );
 }
 
-function SearchBar() {
+function SearchBar({ onSetSearchText }) {
   return (
     <div className="flex border-stone-300 border-2 py-2 px-2.5 gap-2.5 rounded-md ">
       <svg className="size-6 text-stone-600">
         <use href="/sprite.svg#search"></use>
       </svg>
       <input
+        onInput={(e) => onSetSearchText(e.target.value)}
         type="text"
         placeholder="Buscar cursos..."
         className="bg-transparent border-none focus:outline-none"
