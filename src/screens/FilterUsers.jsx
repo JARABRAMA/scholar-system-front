@@ -24,7 +24,7 @@ export function FilterUsers() {
   } = useFilterUsers();
 
   return (
-    <main className="grid grid-cols-[auto_1fr] overflow-hidden">
+    <main className="grid grid-cols-[auto_1fr] bg-stone-100 overflow-hidden">
       <SideBar />
       <Content
         setRoles={onSetRole}
@@ -47,7 +47,7 @@ function StatisticCard({ title, value }) {
   return (
     <article
       className="flex flex-col items-center justify-center shadow-sm shadow-stone-300/80
-    bg-white rounded-md border border-stone-300 px-5 py-3 gap-3"
+    bg-stone-100 rounded-md border border-stone-300 px-5 py-3 gap-3"
     >
       <p className="text-stone-400 whitespace-no-wrap text-sm">{title}</p>
       <h3 className="text-2xl text-black font-mono font-bold">{value}</h3>
@@ -99,7 +99,7 @@ function Content({
     <section className="flex flex-col flex-1 overflow-hidden py-8 px-12">
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h2 className="text-4xl">Gestionar Usuarios</h2>
+          <h1 className="text-4xl">Gestionar Usuarios</h1>
           <span className="text-stone-400">
             Administra estudiantes, docentes y administradores.
           </span>

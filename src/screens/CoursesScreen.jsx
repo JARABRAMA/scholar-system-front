@@ -3,6 +3,8 @@ import { Button } from "../components/Button.jsx";
 import { Spinner } from "../components/Spinner.jsx";
 import { Pagination } from "../components/Pagination.jsx";
 import { useCourses } from "../hooks/useCourses.jsx";
+import { useNavigate } from "react-router";
+import { NavigationPaths } from "../navigation/NavigationPaths.jsx";
 
 export function CoursesScreen() {
   return (
@@ -27,10 +29,25 @@ function Content() {
     onPreviousPage,
     onSetPage,
   } = useCourses();
+  const navigate = useNavigate();
   return (
-    <section className="p-8 overflow-y-hidden ">
-      <h1 className="text-2xl font-bold">Gestionar Cursos</h1>
-      <p className="text-stone-600">Oferta académica del semestre</p>
+    <section className="py-8 px-12 overflow-y-hidden ">
+      <header className="flex justify-between items-center mb-4">
+        <div>
+          <h1 className="text-4xl">Gestionar Cursos</h1>
+          <p className="text-stone-400">Oferta académica del semestre</p>
+        </div>
+        <Button
+          onClick={() => navigate(NavigationPaths.NEW_COURSE)}
+          className="bg-blue-600 text-white flex items-center px-3 gap-2 hover:outline-0"
+        >
+          <svg className="size-8 p-0 m-0">
+            <use href="/sprite.svg#plus"> </use>
+          </svg>
+          Añadir curso
+        </Button>
+      </header>
+
       <SearchBar onSetSearchText={onSetSearchText} />
       <CoursesGird
         courses={courses}
