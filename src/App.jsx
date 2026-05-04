@@ -10,6 +10,7 @@ import { CoursesScreen } from "./screens/CoursesScreen.jsx";
 import { ProfileScreen } from "./screens/ProfileScreen.jsx";
 import { EditUser } from "./screens/EditUser.jsx";
 import { NewCourse } from "./screens/NewCourseScreen.jsx";
+import { CourseDetails } from "./screens/CourseDetails.jsx";
 
 function App() {
   return (
@@ -24,6 +25,10 @@ function App() {
           <Route path={NavigationPaths.EDIT_USER} element={<EditUser />} />
           <Route path={NavigationPaths.COURSES} element={<CoursesScreen />} />
           <Route path={NavigationPaths.NEW_COURSE} element={<NewCourse />} />
+          <Route
+            path={NavigationPaths.COURSE_DETAIL}
+            element={<CourseDetails />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>
