@@ -66,16 +66,36 @@ function useNewCourse() {
     setLoading(false);
   };
 
-  return { onSubmitForm, loading, error };
+  const onDismissError = () => setError(undefined);
+
+  return { onSubmitForm, loading, error, onDismissError };
 }
 
 function NewCourseForm() {
-  const { onSubmitForm, loading, error } = useNewCourse();
+  const { onSubmitForm, loading, error, onDismissError } = useNewCourse();
   return (
     <>
       {loading && (
-        <Dialog>
+        <Dialog open={loading}>
           <Spinner />
+        </Dialog>
+      )}
+
+      {!loading && error && (
+        <Dialog open={error}>
+          <div className="flex flex-col p-4 justify-between items-center gap-2">
+            <svg className="size-18 text-red-500">
+              <use href="/sprite.svg#error" />
+            </svg>
+            <h3 className="text-2xl self-center text-center">{error.title}</h3>
+            <span>{error.detail}</span>
+            <Button
+              className="bg-blue-600 text-white flex items-center px-3 gap-2 hover:outline-0 self-end"
+              onClick={onDismissError}
+            >
+              Reintentar
+            </Button>
+          </div>
         </Dialog>
       )}
       <form
