@@ -42,7 +42,6 @@ export function useFetchCities() {
         },
       );
       const data = await res.json();
-      console.log("municipios: ", data);
       if (res.ok) {
         setMunicipalities(data);
       }
@@ -55,7 +54,6 @@ export function useFetchCities() {
   }, [chosenDepartment, baseUrl, accessToken]);
 
   const onChoseDepartment = (dept) => {
-    console.log("change departament: ", dept);
     setChosenDepartment(dept);
   };
 

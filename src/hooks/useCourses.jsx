@@ -33,7 +33,6 @@ export function useCourses() {
       );
       const data = await res.json();
       if (res.ok) {
-        console.log("course reponse: ", data);
         setTotalPages(data.totalPages);
         setIsFirst(data.first);
         setIsLast(data.last);

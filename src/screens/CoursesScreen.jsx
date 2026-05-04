@@ -111,6 +111,7 @@ function CoursesGird({
 }
 
 function CourseCard({ code, name, credits, ngroups }) {
+  const navigate = useNavigate();
   return (
     <div
       className="bg-white  gap-2 rounded-xl shadow-sm shadow-stone-100 
@@ -124,6 +125,7 @@ function CourseCard({ code, name, credits, ngroups }) {
           {credits} créditos
         </span>
         <Button
+          onClick={() => navigate(`/courses/${code}`)}
           className={
             "w-fit h-fit border border-stone-300 rounded-xl text-stone-900"
           }

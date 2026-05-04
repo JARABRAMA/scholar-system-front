@@ -23,7 +23,6 @@ export function useLogin() {
     });
 
     const data = await res.json();
-    console.log(data);
 
     if (res.ok) {
       login(data.accessToken);

@@ -43,8 +43,6 @@ function useNewCourse() {
     setLoading(true);
     const formData = new FormData(e.target);
     const requestData = Object.fromEntries(formData.entries());
-    console.log("request create course data: ", requestData);
-    console.log("acces token: ", accessToken);
 
     const res = await fetch(`${courseService}/api/courses`, {
       method: "POST",

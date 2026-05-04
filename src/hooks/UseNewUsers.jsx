@@ -23,7 +23,6 @@ export function useNewUser() {
     event.preventDefault();
     onSetLoading(true);
     const newUser = Object.fromEntries(new FormData(event.target).entries());
-    console.log(newUser);
     const res = await fetch(`${baseUrl}/users`, {
       method: "POST",
       headers: {
@@ -33,7 +32,6 @@ export function useNewUser() {
       body: JSON.stringify(newUser),
     });
     const data = await res.json();
-    console.log(data);
     if (res.ok) {
       navigate(NavigationPaths.USERS);
     } else {
