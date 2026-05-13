@@ -42,18 +42,19 @@ export function useCourses() {
       }
       setLoading(false);
     };
-    fetchCourses();
-  }, [searchParams]);
 
-  useEffect(() => {
     const timer = setTimeout(() => {
-      const params = new URLSearchParams(searchParams);
-      params.set("text", searchText);
-      params.set("page", page);
-      setSearchParams(params);
+      fetchCourses();
     }, 500);
 
     return () => clearTimeout(timer);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    params.set("text", searchText);
+    params.set("page", page);
+    setSearchParams(params);
   }, [searchText, searchParams, page]);
 
   return {

@@ -6,6 +6,7 @@ import { Spinner } from "../components/Spinner.jsx";
 import { useNavigate } from "react-router";
 import { NavigationPaths } from "../navigation/NavigationPaths.jsx";
 import { Pagination } from "../components/Pagination.jsx";
+import { captalize } from "../utils/captalize.js";
 
 export function FilterUsers() {
   const {
@@ -225,9 +226,4 @@ function RoleSpan({ role }) {
     className += `bg-green-100 text-green-700`;
   }
   return <span className={className}>{captalize(role.toLowerCase())}</span>;
-}
-
-function captalize(str) {
-  if (!str) return ""; // Manejar cadenas vacías o nulas
-  return str.charAt(0).toUpperCase() + str.slice(1);
 }

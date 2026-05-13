@@ -121,7 +121,7 @@ function CourseCard({ code, name, credits, ngroups }) {
       <span className="text-lg text-black">{name}</span>
       <span className="text-stone-600 text-sm">{ngroups} grupos</span>
       <div className="flex justify-between">
-        <span className="bg-blue-100 w-fit px-1.5 py-0.5 rounded-lg text-blue-800">
+        <span className="bg-blue-100 w-fit px-3 rounded-full items-center justify-center flex text-blue-800">
           {credits} créditos
         </span>
         <Button

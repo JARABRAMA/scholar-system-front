@@ -7,4 +7,5 @@ export const NavigationPaths = {
   COURSE_DETAIL: "/courses/:courseId",
   PROFILE: "/profile/:id",
   EDIT_USER: "/users/edit/:id",
+  NEW_GROUP: "/courses/:courseId/new-group",
 };
