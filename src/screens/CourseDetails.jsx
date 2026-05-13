@@ -4,6 +4,7 @@ import { useCourseDetails } from "../hooks/useCourseDetials.jsx";
 import { useCourseGroups } from "../hooks/useCourseGroups.jsx";
 import { Button } from "../components/Button.jsx";
 import { ProfileIcon } from "../components/ProfileIcon.jsx";
+import { formatTo4Digits } from "../utils/utils.js";
 
 export function CourseDetails() {
   return (
@@ -162,8 +163,4 @@ function ScheduleItem({ day, startTime, endTime }) {
       </div>
     </div>
   );
-}
-
-function formatTo4Digits(number) {
-  return number.toString().padStart(4, "0");
 }
