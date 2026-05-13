@@ -4,6 +4,7 @@ import { Spinner } from "../components/Spinner";
 import { RolePill } from "../components/RolePill.jsx";
 import { Button } from "../components/Button.jsx";
 import { useFetchUser } from "../hooks/useFetchUser.jsx";
+import { ProfileIcon } from "../components/ProfileIcon.jsx";
 
 export function ProfileScreen() {
   const { user, error, loading } = useFetchUser();
@@ -29,7 +30,7 @@ function Content({ user, loading, error }) {
         <section className="flex flex-col flex-1 bg-stone-100">
           <div className="flex flex-col rounded-xl border border-stone-300 bg-white p-8 gap-8 m-8">
             <div className="flex w-full h-fit gap-8 border-b border-stone-300 pt-4 pb-8 items-center">
-              <ProfileIcon fullName={user.fullName} />
+              <ProfileIcon fullName={user.fullName} className="size-16" />
               <div className="flex flex-col gap-1 align-center justify-center">
                 <span className="text-2xl">{user.fullName}</span>
                 <span className="text-md text-stone-500">{user.email}</span>
@@ -80,25 +81,6 @@ function UserField({ title, value }) {
     <div className="flex flex-col">
       <span className="text-stone-500">{title}</span>
       <span className="text-stone-900">{value}</span>
-    </div>
-  );
-}
-
-function ProfileIcon({ fullName }) {
-  const getInitials = (str) =>
-    str
-      ?.split(" ")
-      .slice(0, 2)
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase() || "";
-
-  return (
-    <div
-      className="rounded-full bg-linear-to-r from-cyan-500 to-blue-800
-   text-white text-2xl size-16 flex items-center justify-center-safe"
-    >
-      {getInitials(fullName)}
     </div>
   );
 }
