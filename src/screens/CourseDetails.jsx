@@ -3,6 +3,7 @@ import { captalize } from "../utils/captalize.js";
 import { useCourseDetails } from "../hooks/useCourseDetials.jsx";
 import { useCourseGroups } from "../hooks/useCourseGroups.jsx";
 import { Button } from "../components/Button.jsx";
+import { ProfileIcon } from "../components/ProfileIcon.jsx";
 
 export function CourseDetails() {
   return (
@@ -80,6 +81,7 @@ function GroupsList() {
               name={g.groupName}
               schedules={g.schedules}
               teacher={g.teacher}
+              id={g.id}
             />
           ))}
         </div>
@@ -95,22 +97,34 @@ function GroupsList() {
   );
 }
 
-function GroupCard({ name, schedules, teacher }) {
+function GroupCard({ name, schedules, teacher, id }) {
   return (
-    <div
-      className="bg-white shadow-sm px-6 py-4 rounded-xl flex flex-col border border-stone-300 gap-2
+    <article
+      className=" shadow-sm  rounded-xl flex flex-col border bg-stone-100 border-stone-300 gap-2
     justify-between"
     >
-      <span className="text-xl">{captalize(name)}</span>
-      <div className="bg-indigo-500 text-white px-2 py-1 rounded-md">
-        <span>
-          {teacher ? `Profesor: ${teacher.fullName}` : "Profesor: No asignado"}
+      <header className="flex flex-1 bg-indigo-500 w-full h-full rounded-t-xl text-indigo-100 justify-between px-4 py-4 items-center">
+        <span className="text-2xl font-bold">{captalize(name)}</span>
+        <span className="text-sm bg-indigo-700 rounded-lg py-1 px-2 text-indigo-300">
+          CS-{formatTo4Digits(id)}
         </span>
-        {teacher && <span>{teacher.email}</span>}
-      </div>
-      <span>Horario</span>
+      </header>
+      <section className="flex gap-4 px-4 py-2 items-center">
+        <ProfileIcon fullName={teacher.fullName} className="size-12" />
+        <div className="flex flex-col ">
+          <span>
+            {teacher
+              ? `Profesor: ${teacher.fullName}`
+              : "Profesor: No asignado"}
+          </span>
+          {teacher && (
+            <span className="text-sm text-stone-600">{teacher.email}</span>
+          )}
+        </div>
+      </section>
       {schedules && (
-        <div className="bg-stone-300 px-2 py-2 rounded">
+        <section className="mx-6 text-sm bg-stone-300 p-4 rounded-xl my-2 flex flex-col gap-1">
+          <span className="text-stone-800">HORARIO</span>
           {schedules.map((s) => (
             <ScheduleItem
               day={s.day}
@@ -118,24 +132,38 @@ function GroupCard({ name, schedules, teacher }) {
               endTime={s.endTime}
             />
           ))}
-        </div>
+        </section>
       )}
       <Button
-        className={"self-end bg-blue-500 text-white border-0 hover:bg-blue-600"}
+        className={
+          "self-end bg-blue-500 text-white border-0 hover:bg-blue-600 m-4 flex gap-1"
+        }
       >
         Ver grupo
+        <svg className="size-5">
+          <use href="/sprite.svg#navigate-next" />
+        </svg>
       </Button>
-    </div>
+    </article>
   );
 }
 
 function ScheduleItem({ day, startTime, endTime }) {
   return (
-    <div className="flex gap-2 justify-between">
-      <span>{captalize(day.toLowerCase())}</span>
-      <div className="flex gap-1">
-        <span>{startTime}</span>-<span>{endTime}</span>
+    <div className="flex gap-2 justify-between items-center pe-9">
+      <span className="flex text-stone-800 items-center gap-1">
+        <svg className="size-4">
+          <use href="/sprite.svg#calendar" />
+        </svg>
+        {captalize(day.toLowerCase())}
+      </span>
+      <div className="flex gap-1 text-stone-800 font-bold">
+        <span>{startTime.slice(0, 5)}</span>-<span>{endTime.slice(0, 5)}</span>
       </div>
     </div>
   );
+}
+
+function formatTo4Digits(number) {
+  return number.toString().padStart(4, "0");
 }
