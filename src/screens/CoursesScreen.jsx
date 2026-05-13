@@ -5,6 +5,7 @@ import { Pagination } from "../components/Pagination.jsx";
 import { useCourses } from "../hooks/useCourses.jsx";
 import { useNavigate } from "react-router";
 import { NavigationPaths } from "../navigation/NavigationPaths.jsx";
+import { formatTo4Digits } from "../utils/utils.js";
 
 export function CoursesScreen() {
   return (
@@ -31,7 +32,7 @@ function Content() {
   } = useCourses();
   const navigate = useNavigate();
   return (
-    <section className="py-8 px-12 overflow-y-hidden ">
+    <section className="py-8 px-12 overflow-y-auto">
       <header className="flex justify-between items-center mb-4">
         <div>
           <h1 className="text-4xl">Gestionar Cursos</h1>
@@ -85,7 +86,7 @@ function CoursesGird({
           <Spinner />
         </div>
       )}
-      <section className="my-8 course-grid gap-5 justify-between items-start overflow-y-auto ">
+      <section className="my-8 grid grid-cols-3 gap-5 justify-between items-start overflow-y-auto ">
         {courses &&
           courses.map((c) => (
             <CourseCard
@@ -113,27 +114,48 @@ function CoursesGird({
 function CourseCard({ code, name, credits, ngroups }) {
   const navigate = useNavigate();
   return (
-    <div
+    <article
       className="bg-white  gap-2 rounded-xl shadow-sm shadow-stone-100 
-     border-2 border-stone-300 px-4 py-4 flex flex-col "
+     border-2 border-stone-300  flex flex-col flex-1"
     >
-      <span className="text-stone-600">{code}</span>
-      <span className="text-lg text-black">{name}</span>
-      <span className="text-stone-600 text-sm">{ngroups} grupos</span>
-      <div className="flex justify-between">
-        <span className="bg-blue-100 w-fit px-3 rounded-full items-center justify-center flex text-blue-800">
-          {credits} créditos
+      <header className="flex flex-col gap-2 px-4 py-4 bg-sky-600 rounded-t-xl text-sky-100">
+        <span className="bg-sky-700 rounded-lg p-1 w-fit text-sm">
+          CS-{formatTo4Digits(code)}
         </span>
-        <Button
-          onClick={() => navigate(`/courses/${code}`)}
-          className={
-            "w-fit h-fit border border-stone-300 rounded-xl text-stone-900"
-          }
-        >
-          Ver grupos
-        </Button>
-      </div>
-    </div>
+        <span className="text-lg font-bold">{name.toUpperCase()}</span>
+      </header>
+      <section className="grid grid-cols-2 gap-4 justify-center items-center px-4 py-2">
+        <div className="flex flex-col bg-stone-300 p-3 rounded-md">
+          <span className="font-bold text-xl">{ngroups}</span>
+          <span className="text-sm flex gap-1 items-center">
+            <svg className="size-4">
+              <use href="/sprite.svg#board"></use>
+            </svg>
+            grupos
+          </span>
+        </div>
+        <div className="flex flex-col bg-stone-300 p-3 rounded-md">
+          <span className="font-bold text-xl">{credits}</span>
+          <span className="text-sm flex gap-1 items-center">
+            <svg className="size-4">
+              <use href="/sprite.svg#hat"></use>
+            </svg>
+            creditos
+          </span>
+        </div>
+      </section>
+      <Button
+        onClick={() => navigate(`/courses/${code}`)}
+        className={
+          "w-fit h-fit border border-stone-300 rounded-xl self-end mx-4 mb-4 bg-sky-600 text-sky-100 flex gap-1"
+        }
+      >
+        Ver grupos
+        <svg className="size-5">
+          <use href="/sprite.svg#navigate-next"></use>
+        </svg>
+      </Button>
+    </article>
   );
 }
 
