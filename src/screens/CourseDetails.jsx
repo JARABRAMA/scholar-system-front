@@ -34,7 +34,7 @@ function Content() {
         </div>
       )}
       {course && (
-        <section className="py-8 px-12 overflow-y-hidden flex flex-col gap-8 ">
+        <section className="py-8 px-12 overflow-y-auto flex flex-col gap-8 ">
           <header className="flex justify-between items-center">
             <div>
               <h1 className="text-4xl">{course.name}</h1>
@@ -75,7 +75,7 @@ function GroupsList() {
         </div>
       )}
       {groups && (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 ">
           {groups.map((g) => (
             <GroupCard
               key={g.id}

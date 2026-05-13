@@ -32,7 +32,7 @@ function Content() {
   } = useCourses();
   const navigate = useNavigate();
   return (
-    <section className="py-8 px-12 overflow-y-auto">
+    <section className="py-8 px-12 overflow-y-auto  flex flex-col">
       <header className="flex justify-between items-center mb-4">
         <div>
           <h1 className="text-4xl">Gestionar Cursos</h1>
@@ -48,7 +48,6 @@ function Content() {
           Añadir curso
         </Button>
       </header>
-
       <SearchBar onSetSearchText={onSetSearchText} />
       <CoursesGird
         courses={courses}
@@ -65,7 +64,6 @@ function Content() {
     </section>
   );
 }
-
 function CoursesGird({
   courses,
   loading,
@@ -79,14 +77,16 @@ function CoursesGird({
   onSetPage,
 }) {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   return (
-    <>
+    <div className="flex flex-col flex-1">
       {loading && !courses && !error && (
         <div className="flex flex-1 justify-center items-center">
           <Spinner />
         </div>
       )}
-      <section className="my-8 grid grid-cols-3 gap-5 justify-between items-start overflow-y-auto ">
+
+      <section className="my-8 grid grid-cols-3 gap-5 items-start flex-1 content-start">
         {courses &&
           courses.map((c) => (
             <CourseCard
@@ -98,6 +98,7 @@ function CoursesGird({
             />
           ))}
       </section>
+
       <Pagination
         currentPage={currentPage}
         isFirstPage={isFirst}
@@ -107,7 +108,7 @@ function CoursesGird({
         onSetPage={onSetPage}
         pages={pages}
       />
-    </>
+    </div>
   );
 }
 
