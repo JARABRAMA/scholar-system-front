@@ -88,7 +88,7 @@ function GroupsList() {
         </div>
       )}
       {groups && groups.length === 0 && (
-        <div className="flex flex-1 items-center justify-center">
+        <div className="grid grid-cols-3">
           <span className="text-2xl text-stone-400 text-center">
             No hay grupos creados para este curso aún
           </span>
@@ -100,18 +100,17 @@ function GroupsList() {
 
 function GroupCard({ name, schedules, teacher, id }) {
   return (
-    <article
-      className=" shadow-sm  rounded-xl flex flex-col border bg-stone-100 border-stone-300 gap-2
-    justify-between"
-    >
-      <header className="flex flex-1 bg-indigo-500 w-full h-full rounded-t-xl text-indigo-100 justify-between px-4 py-4 items-center">
+    <article className="shadow-sm  rounded-xl flex flex-col border bg-stone-100 border-stone-300 justify-between gap-2">
+      <header className="flex flex-1 max-h-fit bg-indigo-500 w-full h-full rounded-t-xl text-indigo-100 justify-between px-4 py-4 items-center">
         <span className="text-2xl font-bold">{captalize(name)}</span>
         <span className="text-sm bg-indigo-700 rounded-lg py-1 px-2 text-indigo-300">
-          CS-{formatTo4Digits(id)}
+          GP-{formatTo4Digits(id)}
         </span>
       </header>
       <section className="flex gap-4 px-4 py-2 items-center">
-        <ProfileIcon fullName={teacher.fullName} className="size-12" />
+        {teacher && (
+          <ProfileIcon fullName={teacher.fullName} className="size-12" />
+        )}
         <div className="flex flex-col ">
           <span>
             {teacher
@@ -137,7 +136,7 @@ function GroupCard({ name, schedules, teacher, id }) {
       )}
       <Button
         className={
-          "self-end bg-blue-500 text-white border-0 hover:bg-blue-600 m-4 flex gap-1"
+          "self-end justify-self-end bg-indigo-500 text-white border-0 hover:bg-indigo-600 m-4 flex gap-1"
         }
       >
         Ver grupo
