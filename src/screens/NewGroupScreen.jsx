@@ -167,6 +167,9 @@ function GroupForm({ course, teachers }) {
           <Input name={"name"} required={true}>
             Nombre del grupo
           </Input>
+          <Input name={"capacity"} type="number" required={true}>
+            Capacidad del grupo
+          </Input>
 
           <div className="flex flex-col gap-2">
             <span>Profesor</span>
