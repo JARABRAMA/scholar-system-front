@@ -1,17 +1,18 @@
 import { useFetchGroupDetails } from "./useFetchGroupDetails.jsx";
 import { useFetchTeachers } from "./useFetchTeachers.jsx";
 import { useLoginStore } from "../store/LoginStore.jsx";
-import { useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import { useRef, useState, useEffect } from "react";
+import { NavigationPaths } from "../navigation/NavigationPaths.jsx";
 
 export function useGroupDetailsForm() {
+  const navigate = useNavigate();
   const { group, loading, error } = useFetchGroupDetails();
   const { teachers } = useFetchTeachers();
   const accessToken = useLoginStore((state) => state.accessToken);
   const { id: groupId } = useParams();
   const scheduleDialogRef = useRef(null);
 
-  // Estados para formulario
   const [groupName, setGroupName] = useState("");
   const [capacity, setCapacity] = useState(0);
   const [teacherId, setTeacherId] = useState("");
@@ -21,18 +22,15 @@ export function useGroupDetailsForm() {
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // Modal para agregar horario
   const [showAddSchedule, setShowAddSchedule] = useState(false);
   const [newSchedule, setNewSchedule] = useState({
-    day: "MONDAY",
+    day: "LUNES",
     startsTime: "09:00",
     endTime: "10:00",
   });
 
-  // Modal para agregar estudiante
   const [showAddStudent, setShowAddStudent] = useState(false);
 
-  // Inicializar con datos del grupo
   useEffect(() => {
     if (group) {
       setGroupName(group.groupName);
@@ -64,7 +62,7 @@ export function useGroupDetailsForm() {
       },
     ]);
     setShowAddSchedule(false);
-    setNewSchedule({ day: "MONDAY", startsTime: "09:00", endTime: "10:00" });
+    setNewSchedule({ day: "LUNES", startsTime: "09:00", endTime: "10:00" });
   };
 
   const handleRemoveSchedule = (scheduleId) => {
@@ -90,7 +88,6 @@ export function useGroupDetailsForm() {
 
     try {
       const updateRequest = {
-        id: Number.parseInt(groupId, 10),
         groupName,
         capacity: Number.parseInt(capacity, 10),
         teacherId: teacherId ? Number.parseInt(teacherId, 10) : null,
@@ -99,7 +96,6 @@ export function useGroupDetailsForm() {
           startsTime: s.startsTime,
           endTime: s.endTime,
         })),
-        courseId: group.courseId,
         studentsIds: students.map((s) => s.id),
       };
 
@@ -118,8 +114,8 @@ export function useGroupDetailsForm() {
         throw new Error(errorData.message || "Error al actualizar el grupo");
       }
 
-      setSubmitSuccess(true);
       setTimeout(() => setSubmitSuccess(false), 3000);
+      navigate(`/courses/${group.course.code}`);
     } catch (err) {
       setSubmitError(err.message);
     } finally {
