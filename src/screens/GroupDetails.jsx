@@ -8,6 +8,7 @@ import { ProfileIcon } from "../components/ProfileIcon.jsx";
 import { useFetchTeachers } from "../hooks/useFetchTeachers.jsx";
 import { Button } from "../components/Button.jsx";
 import { captalize } from "../utils/captalize.js";
+import { useFetchGroupDetails } from "../hooks/useFetchGroupDetails.jsx";
 
 export function GroupDetails() {
   return (
@@ -27,40 +28,8 @@ function Content() {
   );
 }
 
-function useGroupDetails() {
-  const { id } = useParams();
-  const [group, setGroup] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState();
-  const courseSerivice = import.meta.env.VITE_COUSES_URL;
-  const accessToken = useLoginStore((state) => state.accessToken);
-
-  useEffect(() => {
-    const fetchGroup = async () => {
-      setLoading(true);
-      const res = await fetch(`${courseSerivice}/api/groups/${id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.message || "Error fetching group details");
-        setLoading(false);
-        return;
-      }
-      setGroup(data);
-      console.log(data);
-      setLoading(false);
-    };
-    fetchGroup();
-  }, [id, accessToken, courseSerivice]);
-
-  return { group, loading, error };
-}
-
 function GroupInfoForm() {
-  const { group, loading, error } = useGroupDetails();
+  const { group, loading, error } = useFetchGroupDetails();
   const { teachers } = useFetchTeachers();
   const accessToken = useLoginStore((state) => state.accessToken);
   const { id: groupId } = useParams();
