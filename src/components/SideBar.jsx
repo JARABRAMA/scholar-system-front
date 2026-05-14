@@ -12,7 +12,10 @@ export function SideBar() {
         Gestionar Usuarios
       </SideNav>
       <SideNav
-        selected={location.pathname.startsWith("/courses")}
+        selected={
+          location.pathname.startsWith("/courses") ||
+          location.pathname.startsWith("/groups")
+        }
         path="/courses"
       >
         Gestionar Cursos
