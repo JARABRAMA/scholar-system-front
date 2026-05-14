@@ -5,6 +5,7 @@ import { useCourseGroups } from "../hooks/useCourseGroups.jsx";
 import { Button } from "../components/Button.jsx";
 import { ProfileIcon } from "../components/ProfileIcon.jsx";
 import { formatTo4Digits } from "../utils/utils.js";
+import { useFetchTeachers } from "../hooks/useFetchTeachers.jsx";
 
 export function CourseDetails() {
   return (
@@ -99,6 +100,7 @@ function GroupsList() {
 }
 
 function GroupCard({ name, schedules, teacher, id }) {
+  const navigate = useNavigate();
   return (
     <article className="shadow-sm  rounded-xl flex flex-col border bg-stone-100 border-stone-300 justify-between gap-2">
       <header className="flex flex-1 max-h-fit bg-indigo-500 w-full h-full rounded-t-xl text-indigo-100 justify-between px-4 py-4 items-center">
@@ -135,6 +137,7 @@ function GroupCard({ name, schedules, teacher, id }) {
         </section>
       )}
       <Button
+        onClick={() => navigate(`/groups/${id}`)}
         className={
           "self-end justify-self-end bg-indigo-500 text-white border-0 hover:bg-indigo-600 m-4 flex gap-1"
         }
