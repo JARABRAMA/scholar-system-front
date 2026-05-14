@@ -8,4 +8,5 @@ export const NavigationPaths = {
   PROFILE: "/profile/:id",
   EDIT_USER: "/users/edit/:id",
   NEW_GROUP: "/courses/:courseId/new-group",
+  GROUP_DETAIL: "/groups/:id",
 };

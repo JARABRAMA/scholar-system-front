@@ -12,6 +12,7 @@ import { EditUser } from "./screens/EditUser.jsx";
 import { NewCourse } from "./screens/NewCourseScreen.jsx";
 import { CourseDetails } from "./screens/CourseDetails.jsx";
 import { NewGroupScreen } from "./screens/NewGroupScreen.jsx";
+import { GroupDetails } from "./screens/GroupDetails.jsx";
 
 function App() {
   return (
@@ -33,6 +34,10 @@ function App() {
           <Route
             path={NavigationPaths.NEW_GROUP}
             element={<NewGroupScreen />}
+          />
+          <Route
+            path={NavigationPaths.GROUP_DETAIL}
+            element={<GroupDetails />}
           />
         </Route>
       </Routes>
