@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLoginStore } from "../../store/LoginStore";
+import { Button } from "../Button";
 
 export function AddStudentModal({ onClose, onAdd, students, modalStudentRef }) {
   const [availableStudents, setAvailableStudents] = useState([]);
@@ -11,7 +12,7 @@ export function AddStudentModal({ onClose, onAdd, students, modalStudentRef }) {
   useEffect(() => {
     const fetchAvailableStudents = async () => {
       try {
-        const res = await fetch(`${usersService}/users?role=STUDENT`, {
+        const res = await fetch(`${usersService}/users?role=ESTUDIANTE`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -19,7 +20,8 @@ export function AddStudentModal({ onClose, onAdd, students, modalStudentRef }) {
         if (res.ok) {
           const data = await res.json();
           // Filtrar estudiantes que no estén ya en el grupo
-          const filtered = data.filter(
+          console.log(data);
+          const filtered = data.content.filter(
             (student) => !students.some((s) => s.id === student.id),
           );
           setAvailableStudents(filtered);
