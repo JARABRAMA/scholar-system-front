@@ -10,6 +10,7 @@ export function useLogin() {
 	const [loading, setLoading] = useState(false);
 
 	const onLogin = async (event) => {
+		setError(undefined)
 		setLoading(true);
 		event.preventDefault();
 		const formData = new FormData(event.target);
