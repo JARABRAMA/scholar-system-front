@@ -1,272 +1,202 @@
-import { SideBar } from "../components/SideBar.jsx";
-import { useCourseDetails } from "../hooks/useCourseDetials.jsx";
-import { Spinner } from "../components/Spinner.jsx";
-import { Input } from "../components/Input.jsx";
-import { useState } from "react";
-import { useFetchTeachers } from "../hooks/useFetchTeachers.jsx";
-import { DaysOfWeek } from "../utils/DaysOfWeek.js";
-import { Button } from "../components/Button.jsx";
-import { useLoginStore } from "../store/LoginStore.jsx";
-import { useNavigate } from "react-router";
-import { NavigationPaths } from "../navigation/NavigationPaths.jsx";
-import { Dialog } from "../components/Dialog.jsx";
+import {SideBar} from "../components/SideBar.jsx";
+import {useCourseDetails} from "../hooks/useCourseDetials.jsx";
+import {Spinner} from "../components/Spinner.jsx";
+import {Input} from "../components/Input.jsx";
+import {useFetchTeachers} from "../hooks/useFetchTeachers.jsx";
+import {DaysOfWeek} from "../utils/DaysOfWeek.js";
+import {Button} from "../components/Button.jsx";
+import {Dialog} from "../components/Dialog.jsx";
+import {useNewGroup} from "../hooks/useNewGroup.jsx";
 
 export function NewGroupScreen() {
-  return (
-    <main className="grid grid-cols-[auto_1fr] bg-stone-100 overflow-y-hidden">
-      <SideBar />
-      <Content />
-    </main>
-  );
+	return (
+		<main className="grid grid-cols-[auto_1fr] bg-stone-100 overflow-y-hidden">
+			<SideBar/>
+			<Content/>
+		</main>
+	);
 }
 
 function Content() {
-  const { course, loading: courseDetailLoading } = useCourseDetails();
-  const { teachers, loading: teachersLoading } = useFetchTeachers();
-  return (
-    <section className="py-8 px-12  flex flex-col gap-8 overflow-y-auto">
-      <header>
-        <h1 className="text-4xl">Crear un nuevo grupo</h1>
-        <span className="text-stone-400">
+	const {course, loading: courseDetailLoading} = useCourseDetails();
+	const {teachers, loading: teachersLoading} = useFetchTeachers();
+	return (
+		<section className="py-8 px-12  flex flex-col gap-8 overflow-y-auto">
+			<header>
+				<h1 className="text-4xl">Crear un nuevo grupo</h1>
+				<span className="text-stone-400">
           Llena el formulario para crear un nuevo grupo
         </span>
-      </header>
-      {courseDetailLoading || teachersLoading ? (
-        <div className="flex flex-1 items-center justify-center">
-          <Spinner />
-        </div>
-      ) : course && teachers ? (
-        <GroupForm course={course} teachers={teachers} />
-      ) : null}
-    </section>
-  );
+			</header>
+			{courseDetailLoading || teachersLoading ? (
+				<div className="flex flex-1 items-center justify-center">
+					<Spinner/>
+				</div>
+			) : course && teachers ? (
+				<GroupForm course={course} teachers={teachers}/>
+			) : null}
+		</section>
+	);
 }
 
-function useNewGroup() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState();
-  const courseService = import.meta.env.VITE_COUSES_URL;
-  const accessToken = useLoginStore((state) => state.accessToken);
-  const navigate = useNavigate();
 
-  const onSubmit = (event, courseId) => {
-    setLoading(true);
-    event.preventDefault();
+function GroupForm({course, teachers}) {
+	const {
+		onSubmit,
+		schedules,
+		handleChange,
+		addSchedule,
+		removeSchedule,
+		loading,
+		error,
+		onDismissError,
+	} = useNewGroup();
+	return (
+		<>
+			{loading && (
+				<Dialog open={loading}>
+					<Spinner/>
+				</Dialog>
+			)}
 
-    const createGroup = async () => {
-      setLoading(true);
-      const requestData = Object.fromEntries(
-        new FormData(event.target).entries(),
-      );
-      requestData["courseId"] = courseId;
-      requestData["schedules"] = schedules;
+			{error && (
+				<Dialog open={error}>
+					<div className="flex flex-col p-4 justify-between items-center gap-2">
+						<svg className="size-18 text-red-500">
+							<use href="/sprite.svg#error"/>
+						</svg>
+						<h3 className="text-2xl self-center text-center">{error.title}</h3>
+						<span>{error.detail}</span>
+						<Button
+							className="bg-blue-600 text-white flex items-center px-3 gap-2 hover:outline-0 self-end"
+							onClick={onDismissError}
+						>
+							Reintentar
+						</Button>
+					</div>
+				</Dialog>
+			)}
+			<form
+				className="max-w-3xl flex flex-col gap-4 "
+				onSubmit={(e) => onSubmit(e, course.code)}
+			>
+				<div className=" p-4 bg-white rounded-xl shadow-sm border border-stone-300 grid grid-cols-2 gap-4">
+					<div className="col-span-2">
+						<span>Curso</span>
+						<div className=" border border-stone-300 rounded-xl bg-white shadow-sm flex gap-2 py-2 px-4 w-fit">
+							<svg className="size-6 text-blue-500">
+								<use href="/sprite.svg#book"/>
+							</svg>
+							{course.name}
+						</div>
+					</div>
+					<Input name={"name"} required={true}>
+						Nombre del grupo
+					</Input>
+					<Input name={"capacity"} type="number" required={true}>
+						Capacidad del grupo
+					</Input>
 
-      const res = await fetch(`${courseService}/api/groups`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        method: "POST",
-        body: JSON.stringify(requestData),
-      });
+					<div className="flex flex-col gap-2">
+						<span>Profesor</span>
+						<select
+							className="border border-black px-4 py-2 rounded-md"
+							name="teacherId"
+						>
+							<option value="">Elige un profesor</option>
+							{teachers.map((t) => (
+								<option value={t.id}>{t.fullName}</option>
+							))}
+						</select>
+					</div>
+				</div>
+				<Schedules
+					schedules={schedules}
+					handleChange={handleChange}
+					removeSchedule={removeSchedule}
+					addSchedule={addSchedule}
+				/>
 
-      if (res.ok) {
-        navigate(NavigationPaths.COURSES);
-      } else {
-        const data = await res.json();
-        setError(data);
-      }
-      setLoading(false);
-    };
-
-    createGroup();
-  };
-
-  const [schedules, setSchedules] = useState([
-    { day: "", startsTime: "", endTime: "" },
-  ]);
-
-  const handleChange = (index, field, value) => {
-    const updated = [...schedules];
-    updated[index][field] = value;
-    setSchedules(updated);
-  };
-
-  const addSchedule = () => {
-    setSchedules([...schedules, { day: "", startsTime: "", endTime: "" }]);
-  };
-
-  const removeSchedule = (index) => {
-    const updated = schedules.filter((_, i) => i !== index);
-    setSchedules(updated);
-  };
-  const onDismissError = () => setError(undefined);
-
-  return {
-    onSubmit,
-    schedules,
-    handleChange,
-    addSchedule,
-    removeSchedule,
-    loading,
-    error,
-    onDismissError,
-  };
+				<Button
+					className="bg-blue-500 text-white hover:bg-blue-600"
+					type="submit"
+				>
+					Guardar
+				</Button>
+			</form>
+		</>
+	);
 }
 
-function GroupForm({ course, teachers }) {
-  const {
-    onSubmit,
-    schedules,
-    handleChange,
-    addSchedule,
-    removeSchedule,
-    loading,
-    error,
-    onDismissError,
-  } = useNewGroup();
-  return (
-    <>
-      {loading && (
-        <Dialog open={loading}>
-          <Spinner />
-        </Dialog>
-      )}
+function Schedules({schedules, handleChange, removeSchedule, addSchedule}) {
+	return (
+		<div className="p-4 bg-white rounded-xl shadow-sm border border-stone-300 flex flex-col gap-4">
+			<span>Horarios</span>
 
-      {error && (
-        <Dialog open={error}>
-          <div className="flex flex-col p-4 justify-between items-center gap-2">
-            <svg className="size-18 text-red-500">
-              <use href="/sprite.svg#error" />
-            </svg>
-            <h3 className="text-2xl self-center text-center">{error.title}</h3>
-            <span>{error.detail}</span>
-            <Button
-              className="bg-blue-600 text-white flex items-center px-3 gap-2 hover:outline-0 self-end"
-              onClick={onDismissError}
-            >
-              Reintentar
-            </Button>
-          </div>
-        </Dialog>
-      )}
-      <form
-        className="max-w-3xl flex flex-col gap-4 "
-        onSubmit={(e) => onSubmit(e, course.code)}
-      >
-        <div className=" p-4 bg-white rounded-xl shadow-sm border border-stone-300 grid grid-cols-2 gap-4">
-          <div className="col-span-2">
-            <span>Curso</span>
-            <div className=" border border-stone-300 rounded-xl bg-white shadow-sm flex gap-2 py-2 px-4 w-fit">
-              <svg className="size-6 text-blue-500">
-                <use href="/sprite.svg#book" />
-              </svg>
-              {course.name}
-            </div>
-          </div>
-          <Input name={"name"} required={true}>
-            Nombre del grupo
-          </Input>
-          <Input name={"capacity"} type="number" required={true}>
-            Capacidad del grupo
-          </Input>
+			{schedules.map((schedule, index) => (
+				<div
+					key={index}
+					className="grid grid-cols-4 gap-4 items-center justify-center"
+				>
+					{/* Día */}
+					<div className="flex flex-col gap-1">
+						Dia
+						<select
+							required={true}
+							className="border border-black px-4 py-2 rounded-md"
+							value={schedule.day}
+							onChange={(e) => handleChange(index, "day", e.target.value)}
+						>
+							<option value="">Elige un día</option>
+							{Object.entries(DaysOfWeek).map(([key, value]) => (
+								<option key={key} value={value}>
+									{key}
+								</option>
+							))}
+						</select>
+					</div>
 
-          <div className="flex flex-col gap-2">
-            <span>Profesor</span>
-            <select
-              className="border border-black px-4 py-2 rounded-md"
-              name="teacherId"
-            >
-              <option value="">Elige un profesor</option>
-              {teachers.map((t) => (
-                <option value={t.id}>{t.fullName}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <Schedules
-          schedules={schedules}
-          handleChange={handleChange}
-          removeSchedule={removeSchedule}
-          addSchedule={addSchedule}
-        />
+					{/* Hora inicio */}
+					<Input
+						type="time"
+						required={true}
+						value={schedule.startsTime}
+						onChange={(e) => handleChange(index, "startsTime", e.target.value)}
+					>
+						Hora de inicio
+					</Input>
 
-        <Button
-          className="bg-blue-500 text-white hover:bg-blue-600"
-          type="submit"
-        >
-          Guardar
-        </Button>
-      </form>
-    </>
-  );
-}
-function Schedules({ schedules, handleChange, removeSchedule, addSchedule }) {
-  return (
-    <div className="p-4 bg-white rounded-xl shadow-sm border border-stone-300 flex flex-col gap-4">
-      <span>Horarios</span>
+					{/* Hora fin */}
+					<Input
+						type="time"
+						required={true}
+						value={schedule.endTime}
+						onChange={(e) => handleChange(index, "endTime", e.target.value)}
+					>
+						Hora de finalización
+					</Input>
 
-      {schedules.map((schedule, index) => (
-        <div
-          key={index}
-          className="grid grid-cols-4 gap-4 items-center justify-center"
-        >
-          {/* Día */}
-          <div className="flex flex-col gap-1">
-            Dia
-            <select
-              className="border border-black px-4 py-2 rounded-md"
-              value={schedule.day}
-              onChange={(e) => handleChange(index, "day", e.target.value)}
-            >
-              <option value="">Elige un día</option>
-              {Object.entries(DaysOfWeek).map(([key, value]) => (
-                <option key={key} value={value}>
-                  {key}
-                </option>
-              ))}
-            </select>
-          </div>
+					{/* Botón eliminar */}
+					<Button
+						type="button"
+						onClick={() => removeSchedule(index)}
+						className=" bg-red-500 text-white flex flex-gap 2 items-center w-fit self-cener justify-self-center hover:bg-red-400"
+					>
+						<svg className="size-6">
+							<use href="/sprite.svg#delete"/>
+						</svg>
+					</Button>
+				</div>
+			))}
 
-          {/* Hora inicio */}
-          <Input
-            type="time"
-            value={schedule.startsTime}
-            onChange={(e) => handleChange(index, "startsTime", e.target.value)}
-          >
-            Hora de inicio
-          </Input>
-
-          {/* Hora fin */}
-          <Input
-            type="time"
-            value={schedule.endTime}
-            onChange={(e) => handleChange(index, "endTime", e.target.value)}
-          >
-            Hora de finalización
-          </Input>
-
-          {/* Botón eliminar */}
-          <Button
-            type="button"
-            onClick={() => removeSchedule(index)}
-            className=" bg-red-500 text-white flex flex-gap 2 items-center w-fit self-cener justify-self-center hover:bg-red-400"
-          >
-            <svg className="size-6">
-              <use href="/sprite.svg#delete" />
-            </svg>
-          </Button>
-        </div>
-      ))}
-
-      {/* Botón agregar */}
-      <button
-        type="button"
-        onClick={addSchedule}
-        className="border border-blue-500 text-blue-500 bg-white hover:bg-stone-100 hover:ring hover-ring-blue-500 px-4 py-2 rounded-md"
-      >
-        Agregar horario
-      </button>
-    </div>
-  );
+			{/* Botón agregar */}
+			<button
+				type="button"
+				onClick={addSchedule}
+				className="border border-blue-500 text-blue-500 bg-white hover:bg-stone-100 hover:ring hover-ring-blue-500 px-4 py-2 rounded-md"
+			>
+				Agregar horario
+			</button>
+		</div>
+	);
 }
