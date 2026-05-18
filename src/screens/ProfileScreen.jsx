@@ -6,6 +6,8 @@ import { Button } from '../components/Button.jsx'
 import { useFetchUser } from '../hooks/useFetchUser.jsx'
 import { ProfileIcon } from '../components/ProfileIcon.jsx'
 import { ErrorContainer } from '../components/ErrorContainer.jsx'
+import { DeleteUserDialog } from '../components/DeleteUserDialog.jsx'
+import { useDeleteUser } from '../components/useDeleteUser.jsx'
 
 export function ProfileScreen () {
   const { user, error, loading } = useFetchUser()
@@ -21,6 +23,7 @@ export function ProfileScreen () {
 function Content ({ user, loading, error }) {
   const navigate = useNavigate()
   const onEdit = () => navigate(`/users/edit/${user.id}`)
+  const { deleteDialogRef, onToggleShowDeleteDialog } = useDeleteUser()
 
   if (loading && !error) {
     return (
@@ -35,6 +38,11 @@ function Content ({ user, loading, error }) {
   }
   return (
     <>
+      <DeleteUserDialog
+        fullName={user?.fullName}
+        onToggleShowDeleteDialog={onToggleShowDeleteDialog}
+        deleteDialogRef={deleteDialogRef}
+      />
       {user &&
         <section className='flex flex-col flex-1 bg-stone-100'>
           <div className='flex flex-col rounded-xl border border-stone-300 bg-white p-8 gap-8 m-8'>
@@ -51,6 +59,7 @@ function Content ({ user, loading, error }) {
 
               <div className='flex flex-col gap-4 px-4'>
                 <Button
+                  onClick={onToggleShowDeleteDialog}
                   className='flex bg-red-50 hover:bg-red-100 border border-red-500 text-red-500 gap-2 justify-center'
                 >
                   <svg className='size-5 text-red-500'>
