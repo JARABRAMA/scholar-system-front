@@ -1,99 +1,22 @@
-import { SideBar } from "../components/SideBar.jsx";
-import { Input } from "../components/Input.jsx";
-import { useFetchUser } from "../hooks/useFetchUser.jsx";
-import { Spinner } from "../components/Spinner.jsx";
-import { useFetchCities } from "../hooks/UseFetchCities.jsx";
-import { CitySelect } from "../components/CitySelect.jsx";
-import { Button } from "../components/Button.jsx";
-import { useLoginStore } from "../store/LoginStore.jsx";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import { NavigationPaths } from "../navigation/NavigationPaths.jsx";
-import { useRef } from "react";
+import { SideBar } from '../components/SideBar.jsx'
+import { Input } from '../components/Input.jsx'
+import { Spinner } from '../components/Spinner.jsx'
+import { CitySelect } from '../components/CitySelect.jsx'
+import { Button } from '../components/Button.jsx'
+import { useEffect, useRef } from 'react'
+import { useEditUser } from '../hooks/useEditUser.jsx'
+import { ErrorContainer } from '../components/ErrorContainer.jsx'
 
-export function useEditUser() {
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const accesToken = useLoginStore((state) => state.accessToken);
-  const [updatingLoading, setUpdateLoading] = useState(false);
-  const [updatingError, setUpdateError] = useState();
-  const { user, loading: userLoading, error } = useFetchUser();
-  const navigate = useNavigate();
-
-  const {
-    departments,
-    municipalities,
-    onChoseDepartment,
-    loading: citiesLoading,
-    chosenDepartment,
-  } = useFetchCities();
-
-  const onSubmitForm = async (event) => {
-    setUpdateLoading(true);
-    event.preventDefault();
-    const formData = Object.fromEntries(new FormData(event.target).entries());
-
-    const updatePayload = {
-      fullName: formData.fullName || user.fullName,
-      email: formData.email || user.email,
-      birthDate: formData.birthDate || user.birthDate,
-      department: formData.department || user.department,
-      municipality: formData.municipality || user.municipality,
-    };
-
-    const response = await fetch(`${BASE_URL}/users/${user.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accesToken}`,
-      },
-      body: JSON.stringify(updatePayload),
-    });
-
-    const dataResponse = await response.json();
-
-    if (response.ok) {
-      navigate(NavigationPaths.USERS);
-    } else {
-      setUpdateError(dataResponse);
-      setUpdateLoading(false);
-    }
-  };
-
-  return {
-    user,
-    error,
-    departments,
-    municipalities,
-    onChoseDepartment,
-    loading: userLoading || citiesLoading,
-    chosenDepartment,
-    onSubmitForm,
-    updatingError,
-    updatingLoading,
-    onDissmissError: () => setUpdateError(undefined),
-  };
-}
-
-export function EditUser() {
+export function EditUser () {
   return (
-    <main className="grid grid-cols-[auto_1fr]">
+    <main className='grid grid-cols-[auto_1fr]'>
       <SideBar />
       <Content />
     </main>
-  );
+  )
 }
 
-function ErrorMessage({ title, description, onDissmiss }) {
-  return (
-    <>
-      <span>{title}</span>
-      <span>{description}</span>
-      {onDissmiss && <Button onClick={onDissmiss}>Reintentar</Button>}
-    </>
-  );
-}
-
-function Content() {
+function Content () {
   const {
     user,
     error,
@@ -105,85 +28,87 @@ function Content() {
     onSubmitForm,
     updatingError,
     updatingLoading,
-    onDissmissError,
-  } = useEditUser();
-  const dialogRef = useRef();
+    onDissmissError
+  } = useEditUser()
+  const dialogRef = useRef()
+  console.log(updatingError)
 
   useEffect(() => {
-    if (error) {
-      dialogRef.current.showModal();
+    if (updatingError) {
+      dialogRef.current.showModal()
     } else {
-      dialogRef.current.close();
+      dialogRef.current.close()
     }
-  }, [error, dialogRef]);
+  }, [updatingError])
 
   return (
     <>
-      <dialog ref={dialogRef}>
-        {updatingError && (
-          <ErrorMessage
-            title={updatingError.title}
-            description={updatingError.detail}
-          />
-        )}
+      <dialog ref={dialogRef} className='rounded-2xl self-center justify-self-center'>
+        <div className='flex flex-col gap-2 m-4'>
+
+          <ErrorContainer error={updatingError} />
+          <Button className='w-fit self-end bg-blue-500 text-white hover:bg-blue-600' onClick={onDissmissError}>Volver a intentar</Button>
+        </div>
       </dialog>
+
       {error && (
-        <div className="flex flex-1 bg-stone-100 items-center justify-center">
-          <ErrorMessage title={error.title} description={error.detail} />
+        <div className='flex flex-1 bg-stone-100 items-center justify-center'>
+          <ErrorContainer error={error} />
         </div>
       )}
       {loading && (
-        <div className="flex flex-1 bg-stone-100 items-center justify-center">
+        <div className='flex flex-1 bg-stone-100 items-center justify-center'>
           <Spinner />
         </div>
       )}
       {user && !loading && !error && (
-        <section className=" flex flex-1 bg-stone-100">
-          <div className="m-8">
-            <div className="flex flex-col pb-8">
-              <span className="text-3xl">Editar Usuario</span>
-              <span className="text-stone-600">
+        <section className=' flex flex-1 bg-stone-100'>
+          <div className='m-8'>
+
+            <div className='flex flex-col pb-8'>
+              <span className='text-3xl'>Editar Usuario</span>
+              <span className='text-stone-600'>
                 Solo se pueden modificar: nombre, email, fecha de nacimiento y
                 ciudad
               </span>
             </div>
-            <article className="flex flex-col bg-white border border-stone-300 rounded-xl p-8">
-              <form className="pb-8 " onSubmit={(e) => onSubmitForm(e)}>
-                <section className="grid grid-cols-2 gap-x-8 border-b-2 border-stone-300 pb-8">
-                  <Input name="fullName" placeholder={user.fullName}>
+            <article className='flex flex-col bg-white border border-stone-300 rounded-xl p-8'>
+              <form className='pb-8 ' onSubmit={(e) => onSubmitForm(e)}>
+                <section className='grid grid-cols-2 gap-x-8 border-b-2 border-stone-300 pb-8'>
+                  <Input name='fullName' placeholder={user.fullName}>
                     Nombre Completo
                   </Input>
-                  <Input name="email" type="email" placeholder={user.email}>
+                  <Input name='email' type='email' placeholder={user.email}>
                     Correo Electronico
                   </Input>
                   <Input
-                    name="birthDate"
+                    name='birthDate'
                     placeholder={user.birthDate}
-                    type="date"
+                    type='date'
                   >
                     Fecha de nacimiento
                   </Input>
                   <CitySelect
-                    name="department"
-                    label="Departamento de residencia"
+                    name='department'
+                    label='Departamento de residencia'
                     values={departments}
                     onSelect={onChoseDepartment}
                   />
                   <CitySelect
-                    disabled={!chosenDepartment || chosenDepartment === ""}
-                    name="municipality"
-                    label="Municipio de residencia"
+                    disabled={!chosenDepartment || chosenDepartment === ''}
+                    name='municipality'
+                    label='Municipio de residencia'
                     values={municipalities}
                   />
                 </section>
                 {updatingLoading && (
-                  <div className="flex my-8 items-center justify-center">
+                  <div className='flex my-8 items-center justify-center'>
                     <Spinner />
                   </div>
                 )}
-                <div className="flex justify-end gap-8 mt-8">
-                  <Button className="border">Cancelar</Button>
-                  <Button type="submit" className="bg-blue-600 text-white">
+                <div className='flex justify-end gap-8 mt-8'>
+                  <Button className='border'>Cancelar</Button>
+                  <Button type='submit' className='bg-blue-600 text-white'>
                     Guardar cambios
                   </Button>
                 </div>
@@ -193,5 +118,5 @@ function Content() {
         </section>
       )}
     </>
-  );
+  )
 }
