@@ -1,5 +1,5 @@
 import { useLoginStore } from '../store/LoginStore.jsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useFetchUser } from './useFetchUser.jsx'
 import { useFetchCities } from './UseFetchCities.jsx'
@@ -12,6 +12,13 @@ export function useEditUser () {
   const [updatingError, setUpdateError] = useState()
   const { user, loading: userLoading, error } = useFetchUser()
   const navigate = useNavigate()
+  const [formData, setFormdData] = useState({
+    fullName: '',
+    email: '',
+    birthDate: '',
+    department: '',
+    municipality: ''
+  })
 
   const {
     departments,
@@ -21,10 +28,34 @@ export function useEditUser () {
     chosenDepartment
   } = useFetchCities()
 
+  useEffect(() => {
+    setFormdData(
+      { ...user }
+    )
+    if (user && onChoseDepartment) onChoseDepartment(user.department)
+  }, [user])
+
+  const onUpdateForm = (event) => {
+    console.log('evento :', event.target)
+    if (event.target.name === 'department') {
+      console.log('actualizando departamento')
+      onChoseDepartment(event.target.value)
+      setFormdData({
+        ...user,
+        department: event.target.value,
+        municipality: ''
+      })
+      return
+    }
+    setFormdData({
+      ...formData,
+      [event.target.name]: event.target.value
+    })
+  }
+
   const onSubmitForm = async (event) => {
     setUpdateLoading(true)
     event.preventDefault()
-    const formData = Object.fromEntries(new FormData(event.target).entries())
 
     const updatePayload = {
       fullName: formData.fullName || user.fullName,
@@ -64,6 +95,8 @@ export function useEditUser () {
     onSubmitForm,
     updatingError,
     updatingLoading,
-    onDissmissError: () => setUpdateError(undefined)
+    onDissmissError: () => setUpdateError(undefined),
+    formData,
+    onUpdateForm
   }
 }

@@ -18,18 +18,19 @@ export function EditUser () {
 
 function Content () {
   const {
-    user,
     error,
     departments,
     municipalities,
-    onChoseDepartment,
     loading,
     chosenDepartment,
     onSubmitForm,
     updatingError,
     updatingLoading,
-    onDissmissError
+    onDissmissError,
+    formData,
+    onUpdateForm
   } = useEditUser()
+
   const dialogRef = useRef()
   console.log(updatingError)
 
@@ -61,7 +62,7 @@ function Content () {
           <Spinner />
         </div>
       )}
-      {user && !loading && !error && (
+      {!loading && !error && (
         <section className=' flex flex-1 bg-stone-100'>
           <div className='m-8'>
 
@@ -75,30 +76,43 @@ function Content () {
             <article className='flex flex-col bg-white border border-stone-300 rounded-xl p-8'>
               <form className='pb-8 ' onSubmit={(e) => onSubmitForm(e)}>
                 <section className='grid grid-cols-2 gap-x-8 border-b-2 border-stone-300 pb-8'>
-                  <Input name='fullName' placeholder={user.fullName}>
+                  <Input
+                    onChange={onUpdateForm}
+                    value={formData.fullName}
+                    name='fullName'
+                  >
                     Nombre Completo
                   </Input>
-                  <Input name='email' type='email' placeholder={user.email}>
+                  <Input
+                    value={formData.email}
+                    onChange={onUpdateForm}
+                    name='email'
+                    type='email'
+                  >
                     Correo Electronico
                   </Input>
                   <Input
                     name='birthDate'
-                    placeholder={user.birthDate}
+                    onChange={onUpdateForm}
+                    value={formData.birthDate}
                     type='date'
                   >
                     Fecha de nacimiento
                   </Input>
                   <CitySelect
+                    value={formData.department}
                     name='department'
                     label='Departamento de residencia'
                     values={departments}
-                    onSelect={onChoseDepartment}
+                    onSelect={onUpdateForm}
                   />
                   <CitySelect
                     disabled={!chosenDepartment || chosenDepartment === ''}
                     name='municipality'
                     label='Municipio de residencia'
                     values={municipalities}
+                    value={formData.municipality}
+                    onSelect={onUpdateForm}
                   />
                 </section>
                 {updatingLoading && (
