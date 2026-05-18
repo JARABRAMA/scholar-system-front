@@ -32,7 +32,6 @@ function Content () {
   } = useEditUser()
 
   const dialogRef = useRef()
-  console.log(updatingError)
 
   useEffect(() => {
     if (updatingError) {
