@@ -72,7 +72,6 @@ export function useCourses () {
     setSearchParams(userParams)
   }, [setSearchParams, userParams])
 
-
   return {
     courses,
     loading,
