@@ -79,7 +79,6 @@ function CoursesGird ({
   onPreviousPage,
   onSetPage
 }) {
-  console.log(courses)
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
 
   if (loading && !courses && !error) {
