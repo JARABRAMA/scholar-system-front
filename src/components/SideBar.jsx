@@ -1,5 +1,5 @@
-import { Link, useLocation } from 'react-router';
-import { useLoginStore } from '../store/LoginStore';
+import { Link, useLocation } from 'react-router'
+import { useLoginStore } from '../store/LoginStore'
 
 export function SideBar () {
   const location = useLocation()
@@ -49,7 +49,7 @@ function ProfileLink () {
 
 function SideNav ({ selected, children, className, path = '' }) {
   const classSelected =
-    'rounded-lg bg-white shadow-sm items-center text-black justify-start  text-sm';
+    'rounded-lg bg-white shadow-sm items-center text-black justify-start'
   return (
     <Link
       to={path}
