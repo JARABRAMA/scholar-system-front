@@ -1,7 +1,9 @@
-export function ErrorContainer ({ error }) {
+import { Button } from './Button.jsx'
+
+export function ErrorContainer ({ error, onDissmissError }) {
   return (
-    <div className='flex flex-col justify-center gap-6 flex-1 items-center justify-centertext
-		 text-xl'
+    <div className='flex flex-col justify-center gap-6
+    flex-1 items-center justify-centertext text-xl'
     >
 
       <h2 className='text-2xl font-bold text-red-500 flex flex-col items-center'>
@@ -11,6 +13,10 @@ export function ErrorContainer ({ error }) {
         Error
       </h2>
       <p className='text-stone-800'>{error}</p>
+      {onDissmissError &&
+        <Button onClick={onDissmissError}>
+          Ignorar error
+        </Button>}
     </div>
   )
 }
