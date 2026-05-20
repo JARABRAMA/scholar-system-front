@@ -4,26 +4,43 @@ import { useSearchParams } from 'react-router'
 
 export function useCourses () {
   const apiUrl = import.meta.env.VITE_COUSES_URL
-  const [courses, setCourses] = useState()
+  const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState()
-  const [searchText, setSearchText] = useState('')
   const accessToken = useLoginStore((state) => state.accessToken)
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [page, setPage] = useState(0)
+  const [_, setSearchParams] = useSearchParams()
   const [totalPages, setTotalPages] = useState(0)
   const [isFirst, setIsFirst] = useState()
   const [isLast, setIsLast] = useState()
+  const [userParams, setUserParams] = useState({
+    text: '',
+    page: 0
+  })
+
+  const setPage = (page) => {
+    setUserParams({
+      ...userParams,
+      page
+    })
+  }
+
+  const setSearchText = (text) => {
+    setUserParams({
+      ...userParams,
+      text
+    })
+  }
 
   const onSetSearchText = (text) => setSearchText(text)
   const onSetPage = (newPage) => setPage(newPage)
-  const onNextPage = () => setPage(page + 1)
-  const onPreviousPage = () => setPage(page - 1)
+  const onNextPage = () => setPage(userParams.page + 1)
+  const onPreviousPage = () => setPage(userParams.page - 1)
 
   useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true)
       try {
+        const searchParams = new URLSearchParams(userParams)
         const res = await fetch(`${apiUrl}/api/courses?${searchParams.toString()}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         )
@@ -36,26 +53,26 @@ export function useCourses () {
         } else {
           setError(data)
         }
-        setLoading(false)
-
-        return () => clearTimeout(timer)
       } catch (e) {
         setLoading(false)
         setError('Error de conexión por favor intenta más tarde')
+      } finally {
+        setLoading(false)
       }
     }
+
     const timer = setTimeout(() => {
       fetchCourses()
     }, 500)
-    setLoading(false)
-  }, [accessToken, apiUrl, searchParams])
+
+    return () => clearTimeout(timer)
+  }, [accessToken, apiUrl, userParams])
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams)
-    params.set('text', searchText)
-    params.set('page', page)
-    setSearchParams(params)
-  }, [searchText, searchParams, page, setSearchParams])
+    setSearchParams(userParams)
+  }, [setSearchParams, userParams])
+
+  console.log(courses)
 
   return {
     courses,
@@ -63,7 +80,7 @@ export function useCourses () {
     error,
     onSetSearchText,
     totalPages,
-    currentPage: page,
+    currentPage: userParams.page,
     isLast,
     isFirst,
     onNextPage,
