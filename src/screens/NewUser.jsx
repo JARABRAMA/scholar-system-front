@@ -115,7 +115,7 @@ function NewUserForm ({
           name='department'
           label='Departamento de residencia'
           values={departments}
-          onSelect={setChosenDepartment}
+          onSelect={e => setChosenDepartment(e.target.value)}
         />
         <CitySelect
           disabled={!chosenDepartment || chosenDepartment === ''}
