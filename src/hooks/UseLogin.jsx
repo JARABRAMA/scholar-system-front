@@ -1,42 +1,42 @@
-import { useNavigate } from "react-router";
-import { useLoginStore } from "../store/LoginStore.jsx";
-import { useState } from "react";
+import { useNavigate } from 'react-router'
+import { useLoginStore } from '../store/LoginStore.jsx'
+import { useState } from 'react'
 
-export function useLogin() {
-  const navigate = useNavigate();
-  const login = useLoginStore((state) => state.login);
-  const baseUrl = import.meta.env.VITE_BASE_URL;
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+export function useLogin () {
+  const navigate = useNavigate()
+  const login = useLoginStore((state) => state.login)
+  const baseUrl = import.meta.env.VITE_BASE_URL
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const onLogin = async (event) => {
-    setError(undefined);
-    setLoading(true);
-    event.preventDefault();
-    const formData = new FormData(event.target);
+    setError(undefined)
+    setLoading(true)
+    event.preventDefault()
+    const formData = new FormData(event.target)
     try {
       const res = await fetch(`${baseUrl}/auth/login`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(Object.fromEntries(formData)),
-      });
+        body: JSON.stringify(Object.fromEntries(formData))
+      })
 
-      const data = await res.json();
+      const data = await res.json()
 
       if (res.ok) {
-        login(data.accessToken);
-        navigate("/users");
-        return;
+        login(data.accessToken)
+        navigate('/users')
+        return
       }
-      setLoading(false);
-      setError(data.detail);
+      setLoading(false)
+      setError(data.detail)
     } catch (e) {
-      console.log("error: ", e);
-      setLoading(false);
-      setError("Error de conexión por favor intenta más tarde");
+      console.log('error: ', e)
+      setLoading(false)
+      setError('Error de conexión por favor intenta más tarde')
     }
-  };
-  return { onLogin, error, loading };
+  }
+  return { onLogin, error, loading }
 }
