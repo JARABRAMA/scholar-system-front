@@ -25,11 +25,7 @@ export function useCourses () {
       setLoading(true)
       try {
         const res = await fetch(`${apiUrl}/api/courses?${searchParams.toString()}`,
-          {
-					  headers: {
-					    Authorization: `Bearer ${accessToken}`
-					  }
-          }
+          { headers: { Authorization: `Bearer ${accessToken}` } }
         )
         const data = await res.json()
         if (res.ok) {
