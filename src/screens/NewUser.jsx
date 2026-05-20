@@ -1,11 +1,11 @@
-import { SideBar } from '../components/SideBar';
-import { Input } from '../components/Input';
-import { Button } from '../components/Button';
-import { RoleSelect } from '../components/RoleSelect.jsx';
-import { CitySelect } from '../components/CitySelect.jsx';
-import { useNewUser } from '../hooks/UseNewUsers.jsx';
-import { Dialog } from '../components/Dialog.jsx';
-import { Spinner } from '../components/Spinner.jsx';
+import { SideBar } from '../components/SideBar'
+import { Input } from '../components/Input'
+import { Button } from '../components/Button'
+import { RoleSelect } from '../components/RoleSelect.jsx'
+import { CitySelect } from '../components/CitySelect.jsx'
+import { useNewUser } from '../hooks/UseNewUsers.jsx'
+import { Dialog } from '../components/Dialog.jsx'
+import { Spinner } from '../components/Spinner.jsx'
 
 export function NewUser () {
   const {
@@ -86,7 +86,7 @@ function NewUserForm ({
 }) {
   return (
     <form
-      className='bg-white p-6 rounded-xl my-5 
+      className='bg-white p-6 rounded-xl my-5
     flex flex-col gap-4 h-full'
       onSubmit={onSubmitForm}
     >
