@@ -1,5 +1,5 @@
-import { Navigate, Outlet } from 'react-router';
-import { useLoginStore } from '../store/LoginStore';
+import { Navigate, Outlet } from 'react-router'
+import { useLoginStore } from '../store/LoginStore'
 
 export function PrivateRoute ({ allowedRoles = [] }) {
   const token = useLoginStore((state) => state.accessToken)
