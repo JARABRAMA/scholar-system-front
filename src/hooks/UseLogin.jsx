@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router'
 import { useLoginStore } from '../store/LoginStore.jsx'
 import { useState } from 'react'
+import { NavigationPaths } from '../navigation/NavigationPaths.jsx'
 
 export function useLogin () {
   const navigate = useNavigate()
@@ -27,7 +28,7 @@ export function useLogin () {
 
       if (res.ok) {
         login(data.accessToken)
-        navigate('/users')
+        navigate(NavigationPaths.COURSES)
         return
       }
       setLoading(false)
