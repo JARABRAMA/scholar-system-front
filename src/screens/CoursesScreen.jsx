@@ -99,29 +99,41 @@ function CoursesGird ({
       <ErrorContainer error={error} />
     )
   }
+
+  if (courses?.length === 0) {
+    return (
+      <div className='flex justify-center items-center flex-1'>
+        <p className='text-xl text-stone-400'>Aun no hay grupos registrados</p>
+      </div>
+    )
+  }
   return (
 
-    <div className='flex flex-col flex-1'>
-      <section className='grid grid-cols-3 h-max mt-4'>
-        {courses && courses.map(c =>
-          <CourseCard
-            key={c.code}
-            code={c.code}
-            name={c.name}
-            credits={c.credits}
-            ngroups={c.ngroups}
+    <div className='flex flex-col flex-1 justify-between'>
+      {courses && courses.length !== 0 &&
+        <>
+          <section className='grid grid-cols-3 gap-4 mt-4'>
+            {courses.map(c =>
+              <CourseCard
+                key={c.code}
+                code={c.code}
+                name={c.name}
+                credits={c.credits}
+                ngroups={c.ngroups}
+              />
+
+            )}
+          </section>
+          <Pagination
+            currentPage={currentPage}
+            isFirstPage={isFirst}
+            isLastPage={isLast}
+            onNextPage={onNextPage}
+            onPreviousPage={onPreviousPage}
+            onSetPage={onSetPage}
+            pages={pages}
           />
-        )}
-      </section>
-      <Pagination
-        currentPage={currentPage}
-        isFirstPage={isFirst}
-        isLastPage={isLast}
-        onNextPage={onNextPage}
-        onPreviousPage={onPreviousPage}
-        onSetPage={onSetPage}
-        pages={pages}
-      />
+        </>}
     </div>
   )
 }
