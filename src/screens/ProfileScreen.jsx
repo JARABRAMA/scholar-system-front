@@ -23,7 +23,11 @@ export function ProfileScreen () {
 function Content ({ user, loading, error }) {
   const navigate = useNavigate()
   const onEdit = () => navigate(`/users/edit/${user.id}`)
-  const { deleteDialogRef, onToggleShowDeleteDialog } = useDeleteUser()
+  const {
+    deleteDialogRef, onToggleShowDeleteDialog,
+    errorDelete, loadingDelete, onDeleteUser,
+    onDissmissDeletingError
+  } = useDeleteUser()
 
   if (loading && !error) {
     return (
@@ -42,6 +46,10 @@ function Content ({ user, loading, error }) {
         fullName={user?.fullName}
         onToggleShowDeleteDialog={onToggleShowDeleteDialog}
         deleteDialogRef={deleteDialogRef}
+        errorDelete={errorDelete}
+        loadingDelete={loadingDelete}
+        onDelete={onDeleteUser}
+        onDissmissDeleteError={onDissmissDeletingError}
       />
       {user &&
         <section className='flex flex-col flex-1 bg-stone-100'>
