@@ -81,14 +81,12 @@ function CoursesGird ({
 }) {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
 
-  if (loading && !courses && !error) {
+  if (loading) {
     return (
       <div className='flex flex-col flex-1'>
-        {loading && !courses && !error && (
-          <div className='flex flex-1 justify-center items-center'>
-            <Spinner />
-          </div>
-        )}
+        <div className='flex flex-1 justify-center items-center'>
+          <Spinner />
+        </div>
       </div>
     )
   }
