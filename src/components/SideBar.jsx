@@ -1,16 +1,18 @@
 import { Link, useLocation } from 'react-router'
-import { useLoginStore } from '../store/LoginStore'
+import { useLoginStore } from '../store/LoginStore.jsx'
+import { useSideBar } from '../hooks/useSideBar.jsx'
 
 export function SideBar () {
-  const location = useLocation()
+  const { location, isAdministrator } = useSideBar()
   return (
     <aside
       className='flex flex-col gap-3 bg-stone-200
     py-6 px-3 shadow-sm shadow-stone-100 flex-1'
     >
-      <SideNav selected={location.pathname.startsWith('/users')} path='/users'>
-        Gestionar Usuarios
-      </SideNav>
+      {isAdministrator() &&
+        <SideNav selected={location.pathname.startsWith('/users')} path='/users'>
+          Gestionar Usuarios
+        </SideNav>}
       <SideNav
         selected={
           location.pathname.startsWith('/courses') ||
