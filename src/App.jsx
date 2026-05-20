@@ -13,6 +13,7 @@ import { NewCourse } from './screens/NewCourseScreen.jsx'
 import { CourseDetails } from './screens/CourseDetails.jsx'
 import { NewGroupScreen } from './screens/NewGroupScreen.jsx'
 import { GroupDetails } from './screens/GroupDetails.jsx'
+import { Roles } from './utils/Roles.js'
 
 function App () {
   return (
@@ -20,17 +21,21 @@ function App () {
       <TobBar />
       <Routes>
         <Route path='/' element={<Aouth />} />
-        <Route element={<PrivateRoute allowedRoles={['ADMINISTRADOR']} />}>
-          <Route path={NavigationPaths.NEW_USER} element={<NewUser />} />
-          <Route path={NavigationPaths.USERS} element={<FilterUsers />} />
-          <Route path={NavigationPaths.PROFILE} element={<ProfileScreen />} />
-          <Route path={NavigationPaths.EDIT_USER} element={<EditUser />} />
+        <Route element={<PrivateRoute allowedRoles={[Roles.ADMINISTRADOR, Roles.ESTUDIANTE, Roles.PROFESOR]} />}>
           <Route path={NavigationPaths.COURSES} element={<CoursesScreen />} />
-          <Route path={NavigationPaths.NEW_COURSE} element={<NewCourse />} />
           <Route
             path={NavigationPaths.COURSE_DETAIL}
             element={<CourseDetails />}
           />
+          <Route path={NavigationPaths.PROFILE} element={<ProfileScreen />} />
+          <Route path={NavigationPaths.EDIT_USER} element={<EditUser />} />
+        </Route>
+
+        <Route element={<PrivateRoute allowedRoles={['ADMINISTRADOR']} />}>
+          <Route path={NavigationPaths.NEW_USER} element={<NewUser />} />
+          <Route path={NavigationPaths.USERS} element={<FilterUsers />} />
+          <Route path={NavigationPaths.NEW_COURSE} element={<NewCourse />} />
+
           <Route
             path={NavigationPaths.NEW_GROUP}
             element={<NewGroupScreen />}
