@@ -14,7 +14,7 @@ export function ErrorContainer ({ error, onDissmissError }) {
       </h2>
       <p className='text-stone-800'>{error}</p>
       {onDissmissError &&
-        <Button onClick={onDissmissError}>
+        <Button className='bg-blue-500 text-blue-50 hover:bg-blue-600' onClick={onDissmissError}>
           Ignorar error
         </Button>}
     </div>
