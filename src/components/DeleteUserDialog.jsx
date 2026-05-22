@@ -19,7 +19,15 @@ export function DeleteUserDialog ({
                                          />}
       {loadingDelete && !errorDelete && <Spinner />}
 
-      {errorDelete && <ErrorContainer error={errorDelete} onDissmissError={onDissmissDeleteError} />}
+      {errorDelete &&
+        <div className='p-4'>
+          <ErrorContainer
+            error={errorDelete} onDissmissError={() => {
+              onToggleShowDeleteDialog()
+              onDissmissDeleteError()
+            }}
+          />
+        </div>}
     </dialog>
   )
 }
