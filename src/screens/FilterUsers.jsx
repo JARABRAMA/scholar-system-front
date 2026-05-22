@@ -26,7 +26,7 @@ export function FilterUsers () {
   } = useFilterUsers()
 
   return (
-    <main className='grid grid-cols-[auto_1fr] bg-stone-100 overflow-hidden'>
+    <main className='grid grid-cols-[auto_1fr] justify-between overflow-hidden bg-stone-100 '>
       <SideBar />
       <Content
         setRoles={onSetRole}
@@ -102,7 +102,7 @@ function Content ({
 }) {
   const navigate = useNavigate()
   return (
-    <section className='flex flex-col flex-1 overflow-hidden py-8 px-12'>
+    <section className='flex flex-col flex-1 overflow-y-auto mb-2 pt-8 px-12'>
       <div className='flex justify-between items-center mb-4'>
         <div>
           <h1 className='text-4xl'>Gestionar Usuarios</h1>
@@ -112,7 +112,7 @@ function Content ({
         </div>
         <Button
           onClick={() => navigate(NavigationPaths.NEW_USER)}
-          className='bg-blue-600 text-white flex items-center px-3 gap-2 hover:outline-0'
+          className='bg-blue-600 duration-100 hover:bg-blue-700 text-white flex items-center px-3 gap-2 hover:outline-0'
         >
           <svg className='size-8 p-0 m-0'>
             <use href='/sprite.svg#plus' />
