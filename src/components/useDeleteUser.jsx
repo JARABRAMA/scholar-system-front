@@ -31,7 +31,6 @@ export function useDeleteUser () {
     try {
       const serviceUrl = import.meta.env.VITE_BASE_URL
       const url = `${serviceUrl}/users/${id}`
-      console.log('url: ', url)
       const res = await fetch(url, {
 
         method: 'DELETE',

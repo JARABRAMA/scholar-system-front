@@ -34,7 +34,6 @@ export function useLogin () {
       setLoading(false)
       setError(data.detail)
     } catch (e) {
-      console.log('error: ', e)
       setLoading(false)
       setError('Error de conexión por favor intenta más tarde')
     }

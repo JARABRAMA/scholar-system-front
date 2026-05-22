@@ -5,7 +5,6 @@ import { Roles } from '../utils/Roles.js'
 export function useSideBar () {
   const location = useLocation()
   const role = useLoginStore(state => state.role)
-  console.log(role)
 
   const isAdministrator = () => role === Roles.ADMINISTRADOR
   return {

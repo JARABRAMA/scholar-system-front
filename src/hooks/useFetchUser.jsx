@@ -31,7 +31,6 @@ export function useFetchUser () {
         }
         setLoading(false)
       } catch (e) {
-        console.log('error: ', e)
         setError('Error de conexión por favor intenta más tarde')
         setLoading(false)
       }

@@ -31,7 +31,6 @@ export function useGroupDetailsForm () {
   const [showAddStudent, setShowAddStudent] = useState(false)
 
   useEffect(() => {
-    console.log(group)
     if (group) {
       setGroupName(group.groupName)
       setCapacity(group.capacity)

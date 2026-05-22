@@ -108,7 +108,6 @@ function GroupCardTeacher ({ fullName, email }) {
 }
 
 function GroupCardHeader ({ groupName, courseName, groupId, credits }) {
-  console.log(formatTo4Digits(groupId))
   return (
     <div className='grid grid-cols-[1fr_auto] gap-y-2 justify-between p-4 bg-blue-500
      rounded-t-2xl text-white'

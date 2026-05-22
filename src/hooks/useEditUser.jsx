@@ -36,9 +36,7 @@ export function useEditUser () {
   }, [user])
 
   const onUpdateForm = (event) => {
-    console.log('evento :', event.target)
     if (event.target.name === 'department') {
-      console.log('actualizando departamento')
       onChoseDepartment(event.target.value)
       setFormdData({
         ...user,
