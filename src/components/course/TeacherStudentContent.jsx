@@ -9,8 +9,14 @@ import { Spinner } from '../Spinner.jsx'
 
 export function TeacherStudentContent () {
   return (
-    <section>
-      <h1>Bienvenido a Scholar System</h1>
+    <section className='flex flex-col gap-8 py-8 px-12'>
+      <header>
+        <h1
+          className='text-4xl'
+        >Bienvenido a Scholar System
+        </h1>
+        <p className='text-stone-600'>Tus grupos inscritos — horarios y profesores de este semestre</p>
+      </header>
       <GroupsGrid />
     </section>
   )
@@ -27,14 +33,14 @@ function GroupsGrid () {
   }
   if (loading) {
     return (
-      <div className='flex flex-1 justify-center items-center'>
+      <div className='flex flex-1 justify-center items-center overflow-y-auto'>
         <Spinner />
       </div>
     )
   }
 
   return (
-    <div className='grid grid-cols-3 items-center gap-4'>
+    <div className='grid grid-cols-3 items-center gap-4 '>
       {groups?.map(g => <GroupCard key={g.id} group={g} />)}
     </div>
   )
