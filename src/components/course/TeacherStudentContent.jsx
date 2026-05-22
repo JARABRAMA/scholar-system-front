@@ -24,9 +24,9 @@ export function TeacherStudentContent () {
 
 function GroupsGrid () {
   const { groups, loading, error } = useTeacherStudentContent()
-  if (loading) {
+  if (error) {
     return (
-      <div>
+      <div className='flex flex-1 mask-center'>
         <ErrorContainer error={error} />
       </div>
     )
