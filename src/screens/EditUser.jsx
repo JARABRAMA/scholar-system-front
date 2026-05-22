@@ -6,6 +6,7 @@ import { Button } from '../components/Button.jsx'
 import { useEffect, useRef } from 'react'
 import { useEditUser } from '../hooks/useEditUser.jsx'
 import { ErrorContainer } from '../components/ErrorContainer.jsx'
+import { useNavigate } from 'react-router'
 
 export function EditUser () {
   return (
@@ -32,6 +33,7 @@ function Content () {
   } = useEditUser()
 
   const dialogRef = useRef()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (updatingError) {
@@ -120,7 +122,7 @@ function Content () {
                   </div>
                 )}
                 <div className='flex justify-end gap-8 mt-8'>
-                  <Button className='border'>Cancelar</Button>
+                  <Button onClick={() => navigate(-1)} className='border'>Cancelar</Button>
                   <Button type='submit' className='bg-blue-600 text-white'>
                     Guardar cambios
                   </Button>
