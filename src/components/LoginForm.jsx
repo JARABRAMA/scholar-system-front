@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { Input } from './Input'
 import { useLogin } from '../hooks/UseLogin.jsx'
 import { Spinner } from './Spinner.jsx'
+import { NavigationPaths } from '../navigation/NavigationPaths.jsx'
 
 export function LoginForm () {
   const { onLogin, error, loading } = useLogin()
@@ -39,7 +40,7 @@ export function LoginForm () {
           Iniciar Sesión
         </Button>
 
-        <Link className='self-center text-blue-700 hover:underline'>
+        <Link to={NavigationPaths.RESET_PASSWORD} className='self-center text-blue-700 hover:underline'>
           ¿Olvidaste tu contraseña?
         </Link>
       </form>
