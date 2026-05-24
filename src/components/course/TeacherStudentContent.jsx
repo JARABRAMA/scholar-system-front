@@ -48,7 +48,7 @@ function GroupsGrid () {
 
 function GroupCard ({ group }) {
   return (
-    <article className='flex flex-col rounded-2xl bg-white h-full justify-between'>
+    <article className='flex flex-col hover:scale-105 duration-100 rounded-2xl bg-white h-full justify-between'>
       <GroupCardHeader
         courseName={group.course.name}
         groupName={group.groupName}
@@ -61,7 +61,7 @@ function GroupCard ({ group }) {
       />
       <ScheduleGroupCard schedules={group.schedules} />
 
-      <Button className='m-4 flex items-center self-end bg-blue-500 text-white hover:bg-amber-500blue-600'>
+      <Button className='m-4 flex items-center self-end bg-sky-800 text-white hover:bg-blue-800 '>
         Ver calificaciones
         <svg className='size-6'>
           <use href='/sprite.svg#navigate-next' />
@@ -74,7 +74,7 @@ function GroupCard ({ group }) {
 
 function ScheduleGroupCard ({ schedules }) {
   return (
-    <div className='flex flex-col p-4 border-y gap-2 border-stone-300'>
+    <div className='flex flex-col  p-4 border-y gap-2 border-stone-300'>
       <span>Horario</span>
       {schedules.length !== 0 && schedules.map((s, index) => <ScheduleItem
         className='bg-stone-200 rounded-xl px-2 py-1'
@@ -92,7 +92,7 @@ function ScheduleGroupCard ({ schedules }) {
 
 function GroupCardTeacher ({ fullName, email }) {
   return (
-    <div className='grid grid-cols-[auto_1fr] p-4 gap-x-4 '>
+    <div className='grid grid-cols-[auto_1fr]  p-4 gap-x-4 '>
       <span className='col-span-2 text-sm text-stone-700 pb-2'>Profesor</span>
       {fullName && email
         ? (
@@ -109,15 +109,15 @@ function GroupCardTeacher ({ fullName, email }) {
 
 function GroupCardHeader ({ groupName, courseName, groupId, credits }) {
   return (
-    <div className='grid grid-cols-[1fr_auto] gap-y-2 justify-between p-4 bg-blue-500
+    <div className='duration-300 grid grid-cols-[1fr_auto] gap-y-2 justify-between bg-sky-800 p-4 bg-sky-blue700
      rounded-t-2xl text-white'
     >
       <span
         className='text-sm text-blue-200'
       >{captalize(groupName.toLowerCase())}
       </span>
-      <span className='bg-blue-800 w-fit px-1.5 text-sm
-       text-blue-300 justify-self-end rounded-full'
+      <span className='bg-sky-700 w-fit px-1.5 text-sm
+       text-sky-200 font-bold justify-self-end rounded-full'
       >G-{formatTo4Digits(groupId)}
       </span>
       <span className='font-bold text-lg'>{captalize(courseName.toLowerCase())}</span>
