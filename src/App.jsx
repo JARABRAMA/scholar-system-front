@@ -14,6 +14,7 @@ import { CourseDetails } from './screens/CourseDetails.jsx'
 import { NewGroupScreen } from './screens/NewGroupScreen.jsx'
 import { GroupDetails } from './screens/GroupDetails.jsx'
 import { Roles } from './utils/Roles.js'
+import { ResetPasswordScreen } from './screens/ResetPasswordScreen.jsx'
 
 function App () {
   return (
@@ -21,6 +22,7 @@ function App () {
       <TobBar />
       <Routes>
         <Route path='/' element={<Aouth />} />
+        <Route path={NavigationPaths.RESET_PASSWORD} element={<ResetPasswordScreen />} />
         <Route element={<PrivateRoute allowedRoles={[Roles.ADMINISTRADOR, Roles.ESTUDIANTE, Roles.PROFESOR]} />}>
           <Route path={NavigationPaths.COURSES} element={<CoursesScreen />} />
           <Route
