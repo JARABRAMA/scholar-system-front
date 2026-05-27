@@ -7,6 +7,7 @@ import { ErrorContainer } from "../ErrorContainer.jsx";
 import { ProfileIcon } from "../ProfileIcon.jsx";
 import { ScheduleItem } from "../schedule/ScheduleItem.jsx";
 import { Spinner } from "../Spinner.jsx";
+import { useLoginStore } from "../../store/LoginStore.jsx";
 
 export function TeacherStudentContent() {
   return (
@@ -50,6 +51,7 @@ function GroupsGrid() {
 
 function GroupCard({ group }) {
   const navigate = useNavigate();
+  const isTeacher = useLoginStore((state) => state.isTeacher);
   return (
     <article className="flex flex-col hover:scale-105 duration-100 rounded-2xl bg-white h-full justify-between">
       <GroupCardHeader
@@ -63,23 +65,24 @@ function GroupCard({ group }) {
         email={group.teacher.email}
       />
       <ScheduleGroupCard schedules={group.schedules} />
-
-      <Button
-        onClick={() => navigate(`/group/${group.id}/grades`)}
-        className="m-4 flex items-center self-end bg-sky-800 text-white hover:bg-blue-800 "
-      >
-        Ver calificaciones
-        <svg className="size-6">
-          <use href="/sprite.svg#navigate-next" />
-        </svg>
-      </Button>
+      {isTeacher && (
+        <Button
+          onClick={() => navigate(`/group/${group.id}/grades`)}
+          className="m-4 flex items-center self-end bg-sky-800 text-white hover:bg-blue-800 "
+        >
+          Ver calificaciones
+          <svg className="size-6">
+            <use href="/sprite.svg#navigate-next" />
+          </svg>
+        </Button>
+      )}
     </article>
   );
 }
 
 function ScheduleGroupCard({ schedules }) {
   return (
-    <div className="flex flex-col  p-4 border-y gap-2 border-stone-300">
+    <div className="flex flex-col p-4 gap-2 border-stone-300">
       <span>Horario</span>
       {schedules.length !== 0 &&
         schedules.map((s, index) => (
