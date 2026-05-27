@@ -16,6 +16,7 @@ import { GroupDetails } from "./screens/GroupDetails.jsx";
 import { Roles } from "./utils/Roles.js";
 import { ResetPasswordScreen } from "./screens/ResetPasswordScreen.jsx";
 import { CourseGradesScreen } from "./screens/CourseGradesScreen.jsx";
+import { StudentGradesScreen } from "./screens/StudentGradesScreen.jsx";
 
 function App() {
   return (
@@ -61,10 +62,18 @@ function App() {
             element={<GroupDetails />}
           />
         </Route>
-        <Route
-          path={NavigationPaths.GRADES}
-          element={<CourseGradesScreen />}
-        ></Route>
+        <Route element={<PrivateRoute allowedRoles={[Roles.PROFESOR]} />}>
+          <Route
+            path={NavigationPaths.GRADES}
+            element={<CourseGradesScreen />}
+          ></Route>
+        </Route>
+        <Route element={<PrivateRoute allowedRoles={[Roles.ESTUDIANTE]} />}>
+          <Route
+            path={NavigationPaths.STUDENT_GRADES}
+            element={<StudentGradesScreen />}
+          ></Route>
+        </Route>
       </Routes>
     </BrowserRouter>
   );
