@@ -3,7 +3,8 @@ import { useLoginStore } from "../store/LoginStore.jsx";
 import { useSideBar } from "../hooks/useSideBar.jsx";
 
 export function SideBar() {
-  const { location, isAdministrator } = useSideBar();
+  const { location, isAdministrator, isStudent } = useSideBar();
+  const userId = useLoginStore((state) => state.id);
   return (
     <aside
       className="flex flex-col gap-3 bg-stone-200
@@ -36,6 +37,20 @@ export function SideBar() {
           Cursos
         </div>
       </SideNav>
+
+      {isStudent() && (
+        <SideNav
+          selected={location.pathname.startsWith("/grades")}
+          path={`/grades/${userId}`}
+        >
+          <div className="flex gap-1 items-center ">
+            <svg className="size-5">
+              <use href="/sprite.svg#stars" />
+            </svg>
+            Notas
+          </div>
+        </SideNav>
+      )}
       <div className="flex-1" />
       <ProfileLink />
     </aside>
