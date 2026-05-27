@@ -11,4 +11,5 @@ export const NavigationPaths = {
   GROUP_DETAIL: "/groups/:id",
   RESET_PASSWORD: "/auth/reset-password",
   GRADES: "/group/:groupId/grades",
+  STUDENT_GRADES: "/grades/:studentId",
 };
