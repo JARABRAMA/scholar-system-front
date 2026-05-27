@@ -61,7 +61,10 @@ function App() {
             element={<GroupDetails />}
           />
         </Route>
-        <Route>path={NavigationPaths.GRADES}</Route>
+        <Route
+          path={NavigationPaths.GRADES}
+          element={<CourseGradesScreen />}
+        ></Route>
       </Routes>
     </BrowserRouter>
   );
