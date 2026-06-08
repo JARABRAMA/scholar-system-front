@@ -1,44 +1,46 @@
-import { useState, useRef, useEffect } from 'react'
-import { ResetPasswordStatus } from '../../utils/ResetPasswordStatus'
+import { useState, useRef, useEffect } from "react";
+import { ResetPasswordStatus } from "../../utils/ResetPasswordStatus";
 
-export function useSendCodeForm ({ onSetStatus, email }) {
-  const [codeSendingError, setCodeSendingError] = useState()
-  const [codeSendingLoading, setCodeSendingLoading] = useState(false)
-  const authenticationService = import.meta.env.VITE_BASE_URL
-  const dialogRef = useRef()
+export function useSendCodeForm({ onSetStatus, email }) {
+  const [codeSendingError, setCodeSendingError] = useState();
+  const [codeSendingLoading, setCodeSendingLoading] = useState(false);
+  const authenticationService = import.meta.env.VITE_BASE_URL;
+  const dialogRef = useRef();
   useEffect(() => {
+    if (!dialogRef.current) return;
     if (codeSendingLoading) {
-      dialogRef.current.showModal()
+      dialogRef.current.showModal();
     } else {
-      dialogRef.current.close()
+      dialogRef.current.close();
     }
-  }, [codeSendingLoading, dialogRef])
+  }, [codeSendingLoading, dialogRef]);
 
   const onSubmit = async (e) => {
-    setCodeSendingLoading(true)
-    setCodeSendingError()
-    e.preventDefault()
+    setCodeSendingLoading(true);
+    setCodeSendingError();
+    e.preventDefault();
     try {
       const res = await fetch(
         `${authenticationService}/auth/send-code/${email}`,
-        { method: 'POST' })
+        { method: "POST" },
+      );
       if (res.ok) {
-        onSetStatus(ResetPasswordStatus.VERIFY_CODE)
-        return
+        onSetStatus(ResetPasswordStatus.VERIFY_CODE);
+        return;
       }
-      const data = await res.json()
-      setCodeSendingError(data.detail)
+      const data = await res.json();
+      setCodeSendingError(data.detail);
     } catch (e) {
-      console.log('Error: ', e)
-      setCodeSendingError('Error de conexion, intenta mas tarde')
+      console.log("Error: ", e);
+      setCodeSendingError("Error de conexion, intenta mas tarde");
     } finally {
-      setCodeSendingLoading(false)
+      setCodeSendingLoading(false);
     }
-  }
+  };
 
   return {
     dialogRef,
     onSubmit,
-    codeSendingError
-  }
+    codeSendingError,
+  };
 }

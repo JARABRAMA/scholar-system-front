@@ -28,7 +28,7 @@ export function StudentGradesScreen() {
   }
 
   return (
-    <main className="grid grid-cols-[auto_1fr]">
+    <main className="grid grid-cols-[auto_1fr] overflow-y-hidden">
       <SideBar />
       <Content grades={grades} />
     </main>
@@ -37,7 +37,7 @@ export function StudentGradesScreen() {
 
 function Content({ grades }) {
   return (
-    <section className="flex flex-col px-12 py-8 gap-8">
+    <section className="flex flex-col px-12 py-8 gap-8 overflow-y-auto">
       <PageHeader />
       <GradesContainer grades={grades} />
     </section>
@@ -46,7 +46,7 @@ function Content({ grades }) {
 
 function GradesContainer({ grades }) {
   return (
-    <div>
+    <div className="flex flex-col gap-8">
       {grades &&
         grades.map((entry) => (
           <GradeTable key={entry.group.groupId} entry={entry} />

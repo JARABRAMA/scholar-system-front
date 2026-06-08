@@ -21,6 +21,7 @@ export function useEvaluations() {
     evaluations,
     loading: gradesLoading,
     error: gradesError,
+    refetch: refetchEvaluations,
   } = useFetchGroupEvaluations({ groupId });
   const {
     students,
@@ -112,5 +113,6 @@ export function useEvaluations() {
     onDismissError: () => {
       setUpdateGradesError(null);
     },
+    refetchEvaluations,
   };
 }

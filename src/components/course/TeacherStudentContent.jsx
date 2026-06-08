@@ -61,8 +61,8 @@ function GroupCard({ group }) {
         credits={group.course.credits}
       />
       <GroupCardTeacher
-        fullName={group.teacher.fullName}
-        email={group.teacher.email}
+        fullName={group.teacher?.fullName}
+        email={group.teacher?.email}
       />
       <ScheduleGroupCard schedules={group.schedules} />
       {isTeacher && (

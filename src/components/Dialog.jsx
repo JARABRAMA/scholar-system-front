@@ -12,7 +12,7 @@ export function Dialog({ open, className, children }) {
   }, [open]);
   return (
     <dialog
-      className={`m-auto w-1/3 h-1/3 rounded-xl border-2 border-stone-400 open:flex open:flex-1 ${className}`}
+      className={`rounded-xl border-2 border-stone-400  ${className}`}
       ref={dialogRef}
     >
       {children}

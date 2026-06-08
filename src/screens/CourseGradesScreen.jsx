@@ -6,6 +6,10 @@ import { formatTo4Digits } from "../utils/utils.js";
 import { useEvaluations } from "../hooks/grades/useEvaluations.jsx";
 import { ErrorDialog } from "../components/ErrorDialog.jsx";
 import { LoadingDialog } from "../components/LoadingDialog.jsx";
+import { Dialog } from "../components/Dialog.jsx";
+import { useCreateEvaluation } from "../components/grades/useCreateEvaluations.jsx";
+import { Input } from "../components/Input.jsx";
+import { useParams } from "react-router";
 
 export function CourseGradesScreen() {
   return (
@@ -17,6 +21,7 @@ export function CourseGradesScreen() {
 }
 
 function Content() {
+  const { groupId } = useParams();
   const {
     group,
     table,
@@ -28,8 +33,27 @@ function Content() {
     updateGradesError,
     updateGradesLoading,
     onDissmissError,
+    refetchEvaluations,
   } = useEvaluations();
 
+  const {
+    isOpenedCreateEvaluation,
+    openCreateEvaluation,
+    closeCreateEvaluation,
+    onCreateEvaluation,
+    formData: formEvaluationData,
+    onUpdateForm: onUpdateFormEvaluationData,
+    loadingCreateEvaluation,
+    errorCreateEvaluation,
+    onDismissCreateEvaluationError,
+  } = useCreateEvaluation({ groupId });
+
+  const handleCreateEvaluation = async (event) => {
+    const success = await onCreateEvaluation(event);
+    if (success) {
+      await refetchEvaluations();
+    }
+  };
   if (loading) {
     return (
       <div className="flex flex-1 justify-center items-center">
@@ -48,13 +72,34 @@ function Content() {
 
   return (
     <>
-      <LoadingDialog loading={updateGradesLoading} />
+      <LoadingDialog loading={isOpenedCreateEvaluation} />
+      <Dialog
+        className="self-center justify-self-center"
+        open={isOpenedCreateEvaluation}
+        onClose={closeCreateEvaluation}
+      >
+        <CreateGradeModalChildren
+          onCreateEvaluation={handleCreateEvaluation}
+          onCancel={closeCreateEvaluation}
+          onUpdate={onUpdateFormEvaluationData}
+          formData={formEvaluationData}
+          loading={loadingCreateEvaluation}
+          error={errorCreateEvaluation}
+          onDismissError={onDismissCreateEvaluationError}
+        />
+      </Dialog>
       <ErrorDialog
         error={updateGradesError}
         onDissmissError={onDissmissError}
       />
-      <section className="flex flex-col gap-8 py-8 px-12">
-        {group && <PageHeader group={group} onSave={onSave} />}
+      <section className="flex flex-col gap-8 py-8 px-12 overflow-y-auto">
+        {group && (
+          <PageHeader
+            group={group}
+            onSave={onSave}
+            openCreateEvaluation={openCreateEvaluation}
+          />
+        )}
         {evaluations && (
           <EvaluationsTable
             evaluations={evaluations}
@@ -67,13 +112,89 @@ function Content() {
   );
 }
 
+function CreateGradeModalChildren({
+  onCreateEvaluation,
+  onCancel,
+  onUpdate,
+  formData,
+  loading,
+  error,
+  onDismissError,
+}) {
+  if (loading)
+    return (
+      <div className="p-8">
+        <Spinner />
+      </div>
+    );
+  if (error)
+    return (
+      <div className="p-8">
+        <ErrorContainer error={error} onDissmissError={onDismissError} />
+      </div>
+    );
+
+  return (
+    <form
+      className="grid grid-cols-2 p-8  gap-x-2 flex-col"
+      onSubmit={onCreateEvaluation}
+    >
+      <h3 className="font-bold col-span-2 text-xl">Nueva evaluacion</h3>
+      <p className="col-span-2 text-stone-600">Crea una nueva evaluación</p>
+      <Input
+        onChange={(e) => {
+          onUpdate(e.target.name, e.target.value);
+        }}
+        value={formData.name}
+        name="name"
+        required
+      >
+        Nombre
+      </Input>
+      <Input
+        onChange={(e) => {
+          onUpdate(e.target.name, e.target.value);
+        }}
+        value={formData.percentage}
+        name="percentage"
+        required
+      >
+        Porcentaje
+      </Input>
+      <Input
+        value={formData.description}
+        name="description"
+        onChange={(e) => {
+          onUpdate(e.target.name, e.target.value);
+        }}
+        required
+        className="col-span-2 min-w-max"
+      >
+        Descripción
+      </Input>
+      <Button
+        className="bg-red-500 hover:bg-red-600 text-white"
+        onClick={onCancel}
+      >
+        Cancelar
+      </Button>
+      <Button
+        className="bg-blue-600 text-white hover:bg-blue-700"
+        type="submit"
+      >
+        Crear
+      </Button>
+    </form>
+  );
+}
+
 function EvaluationsTable({ evaluations, table, updateTable }) {
   const lenCols = evaluations.length;
 
   return (
     <div
       className="grid rounded-xl "
-      style={{ gridTemplateColumns: `repeat(${lenCols + 1}, 1fr)` }}
+      style={{ gridTemplateColumns: `auto repeat(${lenCols}, 1fr)` }}
     >
       <span
         className="bg-blue-50 text-blue-800 font-bold min-h-full self-center text-center
@@ -138,19 +259,23 @@ function TableEvaluationHeader({ evaluationName, percentage }) {
   );
 }
 
-function PageHeader({ group, onSave }) {
+function PageHeader({ group, onSave, openCreateEvaluation }) {
   return (
-    <div className="flex justify-between">
-      <div>
-        <h1 className="text-4xl">Registro de Calificaciones</h1>
-        <p className="text-stone-600">
-          {group?.groupName} - {group?.course.name} - CD-
-          {formatTo4Digits(group.id)}
-        </p>
-      </div>
+    <div className="grid grid-cols-[1fr_auto] justify-between">
+      <h1 className="text-4xl">Registro de Calificaciones</h1>
+      <Button
+        onClick={openCreateEvaluation}
+        className="bg-green-600 h-fit text-white hover:bg-green-700"
+      >
+        Crear Evaluación
+      </Button>
+      <p className="text-stone-600">
+        {group?.groupName} - {group?.course.name} - CD-
+        {formatTo4Digits(group.id)}
+      </p>
       <Button
         onClick={onSave}
-        className="bg-blue-600 h-fit text-white hover:bg-blue-700 row-span-2"
+        className="bg-blue-600 h-fit text-white hover:bg-blue-700"
       >
         Guardar
       </Button>
