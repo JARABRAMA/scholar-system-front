@@ -1,33 +1,33 @@
-import { useEffect, useState } from "react";
-import { useLoginStore } from "../store/LoginStore.jsx";
+import { useEffect, useState } from 'react'
+import { useLoginStore } from '../store/LoginStore.jsx'
 
-export function useFetchCities() {
-  const [loading, setLoading] = useState(true);
-  const [chosenDepartment, setChosenDepartment] = useState();
-  const [departments, setDepartments] = useState();
-  const [municipalities, setMunicipalities] = useState();
-  const baseUrl = import.meta.env.VITE_BASE_URL;
-  const accessToken = useLoginStore((state) => state.accessToken);
+export function useFetchCities () {
+  const [loading, setLoading] = useState(true)
+  const [chosenDepartment, setChosenDepartment] = useState()
+  const [departments, setDepartments] = useState()
+  const [municipalities, setMunicipalities] = useState()
+  const baseUrl = import.meta.env.VITE_BASE_URL
+  const accessToken = useLoginStore((state) => state.accessToken)
 
   // load departments.
   useEffect(() => {
-    setLoading(true);
+    setLoading(true)
     const fetchDepartments = async () => {
       const res = await fetch(`${baseUrl}/city/departments`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+          'Content-Type': 'application/json'
+        }
+      })
 
-      const data = await res.json();
+      const data = await res.json()
       if (res.ok) {
-        setDepartments(data);
+        setDepartments(data)
       }
-      setLoading(false);
-    };
-    fetchDepartments();
-  }, [baseUrl, accessToken]);
+      setLoading(false)
+    }
+    fetchDepartments()
+  }, [baseUrl, accessToken])
 
   // load municipalities
   useEffect(() => {
@@ -37,27 +37,25 @@ export function useFetchCities() {
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      const data = await res.json();
-      console.log("municipios: ", data);
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      const data = await res.json()
       if (res.ok) {
-        setMunicipalities(data);
+        setMunicipalities(data)
       }
-    };
-    if (!chosenDepartment || chosenDepartment == "") {
-      setMunicipalities(undefined);
-    } else {
-      fetchMunicipalities();
     }
-  }, [chosenDepartment, baseUrl, accessToken]);
+    if (!chosenDepartment || chosenDepartment === '') {
+      setMunicipalities(undefined)
+    } else {
+      fetchMunicipalities()
+    }
+  }, [chosenDepartment, baseUrl, accessToken])
 
   const onChoseDepartment = (dept) => {
-    console.log("change departament: ", dept);
-    setChosenDepartment(dept);
-  };
+    setChosenDepartment(dept)
+  }
 
   return {
     departments,
@@ -65,6 +63,6 @@ export function useFetchCities() {
     onChoseDepartment,
     loading,
     onSetLoading: (loading) => setLoading(loading),
-    chosenDepartment,
-  };
+    chosenDepartment
+  }
 }

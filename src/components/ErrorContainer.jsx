@@ -1,0 +1,22 @@
+import { Button } from './Button.jsx'
+
+export function ErrorContainer ({ error, onDissmissError }) {
+  return (
+    <div className='flex flex-col justify-center gap-6
+    flex-1 items-center justify-centertext text-xl'
+    >
+
+      <h2 className='text-2xl font-bold text-red-500 flex flex-col items-center'>
+        <svg className='size-16 text-red-500'>
+          <use href='/sprite.svg#warning' />
+        </svg>
+        Error
+      </h2>
+      <p className='text-stone-800'>{error}</p>
+      {onDissmissError &&
+        <Button className='bg-blue-500 text-blue-50 hover:bg-blue-600' onClick={onDissmissError}>
+          Ignorar error
+        </Button>}
+    </div>
+  )
+}

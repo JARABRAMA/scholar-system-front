@@ -1,82 +1,104 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
-import { useLoginStore } from "../store/LoginStore.jsx";
+import {useEffect, useState} from "react";
+import {useSearchParams} from "react-router";
+import {useLoginStore} from "../store/LoginStore.jsx";
 
 export function useFilterUsers() {
-  const [users, setUsers] = useState();
-  const [search, setSearch] = useState();
-  const [role, setRole] = useState();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const baseUrl = import.meta.env.VITE_BASE_URL;
-  const [searchParams, setSearchParams] = useSearchParams();
-  const accessToken = useLoginStore((state) => state.accessToken);
+	const [users, setUsers] = useState();
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+	const [totalPages, setTotalPages] = useState(0);
+	const [isFirstPage, setIsFirstPage] = useState(false);
+	const [isLastPage, setIsLastPage] = useState(false);
 
-  // update role search params
-  useEffect(() => {
-    if (role && role !== "") {
-      const params = searchParams;
-      params.set("role", role);
-      setSearchParams(params);
-    } else if (role === "") {
-      const params = searchParams;
-      params.delete("role");
-      setSearchParams(params);
-    }
-  }, [role]);
+	const [searchParams, setSearchParams] = useSearchParams();
+	const baseUrl = import.meta.env.VITE_BASE_URL;
+	const accessToken = useLoginStore((state) => state.accessToken);
 
-  // update search search params
-  useEffect(() => {
-    if (search && search !== "") {
-      const params = searchParams;
-      params.set("search", search);
-      setSearchParams(params);
-    } else if (search === "") {
-      const params = searchParams;
-      params.delete("search");
-      setSearchParams(params);
-    }
-  }, [search]);
+	const page = Number(searchParams.get("page")) || 0;
+	const search = searchParams.get("search") || "";
+	const role = searchParams.get("role") || "";
 
-  useEffect(() => {
-    setLoading(true);
-    const timeoutId = setTimeout(() => {
-      const fetchData = async () => {
-        const res = await fetch(`${baseUrl}/users?${searchParams.toString()}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await res.json();
-        console.log("response data: ", data);
-        if (res.ok) {
-          setUsers(data.content);
-        } else {
-          setError(data.detail);
-        }
-        setLoading(false);
-      };
-      fetchData();
-    }, 500);
+	useEffect(() => {
+		setLoading(true);
 
-    return () => clearTimeout(timeoutId);
-  }, [search, role]);
+		const timeoutId = setTimeout(async () => {
+			const url = `${baseUrl}/users?${searchParams.toString()}`;
+			try {
 
-  const onSetSearch = (text) => {
-    console.log(text);
-    setSearch(text);
-  };
 
-  const onSetRole = (role) => {
-    setRole(role);
-  };
+				const res = await fetch(url, {
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+						"Content-Type": "application/json",
+					},
+				});
 
-  return {
-    users,
-    loading,
-    error,
-    onSetSearch,
-    onSetRole,
-  };
+				const data = await res.json();
+
+				if (res.ok) {
+					setUsers(data.content);
+					setTotalPages(data.totalPages);
+					setIsFirstPage(data.first);
+					setIsLastPage(data.last);
+				} else {
+					setError(data.detail);
+				}
+			} catch (e) {
+				setError("Error de conexión por favor intenta más tarde");
+			}
+
+			setLoading(false);
+		}, 400);
+
+		return () => clearTimeout(timeoutId);
+	}, [searchParams, accessToken]);
+
+	const updateParams = (newParams) => {
+		const params = new URLSearchParams(searchParams);
+
+		Object.entries(newParams).forEach(([key, value]) => {
+			if (value === "" || value === null) {
+				params.delete(key);
+			} else {
+				params.set(key, value);
+			}
+		});
+
+		setSearchParams(params);
+	};
+
+	const onSetSearch = (text) => {
+		updateParams({search: text, page: 0}); // reset page
+	};
+
+	const onSetRole = (role) => {
+		updateParams({role, page: 0}); // reset page
+	};
+
+	const onSetPage = (newPage) => {
+		updateParams({page: newPage});
+	};
+
+	const onNextPage = () => {
+		if (!isLastPage) updateParams({page: page + 1});
+	};
+
+	const onPreviousPage = () => {
+		if (!isFirstPage) updateParams({page: page - 1});
+	};
+
+	return {
+		users,
+		loading,
+		error,
+		onSetSearch,
+		onSetRole,
+		totalPages,
+		onSetPage,
+		onNextPage,
+		onPreviousPage,
+		isFirstPage,
+		isLastPage,
+		currentPage: page,
+	};
 }

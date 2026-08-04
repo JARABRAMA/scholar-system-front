@@ -20,6 +20,7 @@ export const useLoginStore = create((set, get, store) => ({
       email: object.sub,
       id: object.jti,
       accessToken: token,
+      isTeacher: object.role === "PROFESOR",
     }));
   },
 

@@ -1,0 +1,16 @@
+import { useLocation } from "react-router";
+import { useLoginStore } from "../store/LoginStore.jsx";
+import { Roles } from "../utils/Roles.js";
+
+export function useSideBar() {
+  const location = useLocation();
+  const role = useLoginStore((state) => state.role);
+  const isStudent = () => role === Roles.ESTUDIANTE;
+
+  const isAdministrator = () => role === Roles.ADMINISTRADOR;
+  return {
+    location,
+    isAdministrator,
+    isStudent,
+  };
+}
